@@ -3,14 +3,19 @@ const db = firebase.firestore();
 
 const tagsRef = db.collection('questionTags');
 const questionsRef = db.collection('sheetQuestions');
+const modsRef = db.collection('sheetMods');
+const areasRef = db.collection('sheetAreas');
 
 const { shouldGetCol } = require("./shouldGetCol");
 const { shouldGetRow } = require("./shouldGetRow");
 const { buildQuestionData } = require("./buildQuestionData");
 let qcount = 0;
-const getWorkBookQuestions = (workbook, bookName) => {
-    const { SheetNames, Sheets } = workbook;
+let mcount = 0;
+let acount = 0;
+const getWorkBookQuestions = async (workbook, bookName) => {
+    await areasRef.doc().set({ name: bookName })
 
+    const { SheetNames, Sheets } = workbook;
     const SheetQuestions = SheetNames.map(sheetName => {
         const sheet = Sheets[sheetName];
         const questions = [];
@@ -27,18 +32,22 @@ const getWorkBookQuestions = (workbook, bookName) => {
             }
             row++;
         }
+        modsRef.doc().set({ name: sheetName });
+        mcount++;
+        console.log("TCL: mcount", mcount)
         return {
             sheetName,
             questions,
         };
     })
         .forEach(({ sheetName, questions }) => {
-            //  await tagsRef.set({name})
             questions.forEach(async (questionData) => {
-                 await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
+                await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
                 qcount++;
                 console.log("TCL: qcount", qcount, questionData, bookName);
             });
         });
+    acount++;
+    console.log("TCL: acount", acount)
 };
 exports.getWorkBookQuestions = getWorkBookQuestions;
