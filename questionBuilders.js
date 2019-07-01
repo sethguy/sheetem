@@ -1,5 +1,5 @@
 const setDefaultQuestion = (props) => {
-    const { colName, v, row, sheetName, questions } = props;
+    const { colName, v, row, sheetName, questions,colIndex } = props;
     if (colName == 'A') {
         const question = { tags: [sheetName], wrongAnswerText: [] }
         question.challange = v;
@@ -21,39 +21,25 @@ const setDefaultQuestion = (props) => {
 
 const buildParagraphQuestions = (props) => {
     const { colName, v, row, sheetName, questions, colIndex } = props;
-
     if (colIndex == 0 && v && v.length) {
-
         const question = { questionSet: [] }
-
         question.statement = v;
-
         questions.push(question);
     } else if (v && v.length) {
-
         const question = questions[questions.length - 1]
-
         const { questionSet } = question;
-
         if (colIndex == 1) {
-
             questionSet.push({ challange: v, wrongAnswerText: [] })
         }
-
         if (colIndex == 2) {
             const currentChallange = questionSet[questionSet.length-1]
             currentChallange.answerText = v
         }
         if (colIndex > 2) {
             const currentChallange = questionSet[questionSet.length-1]
-
             currentChallange.wrongAnswerText.push(v)
-
         }
     }
-
-
-
 }
 
 module.exports = {
