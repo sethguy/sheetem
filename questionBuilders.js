@@ -1,34 +1,23 @@
 const setDefaultQuestion = (props) => {
     const { colName, v, row, sheetName, questions } = props;
-    //console.log("TCL: setDefaultQuestion -> questions",row, questions)
-
     if (colName == 'A') {
         const question = { tags: [sheetName], wrongAnswerText: [] }
-
         question.challange = v;
-
         questions.push(question)
-
     }
     if (colName == 'B') {
         const question = questions[row - 1]
-
         question.answerText = v;
     }
     if (colName == 'C') {
         const question = questions[row - 1]
-
         question.wrongAnswerText.push(v)
     }
     if (colName == 'D') {
         const question = questions[row - 1]
-
         question.wrongAnswerText.push(v)
     }
-
-    //return { ...question }
 };
-
 
 const buildParagraphQuestions = (props) => {
     const { colName, v, row, sheetName, questions, colIndex } = props;
@@ -49,7 +38,6 @@ const buildParagraphQuestions = (props) => {
         if (colIndex == 1) {
 
             questionSet.push({ challange: v, wrongAnswerText: [] })
-
         }
 
         if (colIndex == 2) {
