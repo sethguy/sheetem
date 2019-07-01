@@ -13,8 +13,6 @@ let qcount = 0;
 let mcount = 0;
 let acount = 0;
 const getWorkBookQuestions = async (workbook, bookName) => {
-    await areasRef.doc().set({ name: bookName })
-
     const { SheetNames, Sheets } = workbook;
     const SheetQuestions = SheetNames.map(sheetName => {
         const sheet = Sheets[sheetName];
@@ -32,7 +30,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             }
             row++;
         }
-        modsRef.doc().set({ name: sheetName });
+        //modsRef.doc().set({ name: sheetName, area: bookName });
         mcount++;
         console.log("TCL: mcount", mcount)
         return {
@@ -42,12 +40,13 @@ const getWorkBookQuestions = async (workbook, bookName) => {
     })
         .forEach(({ sheetName, questions }) => {
             questions.forEach(async (questionData) => {
-                await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
+                // await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
                 qcount++;
-                console.log("TCL: qcount", qcount, questionData, bookName);
+                console.log("TCL: qcount", qcount);
             });
         });
     acount++;
+    //await areasRef.doc().set({ name: bookName })
     console.log("TCL: acount", acount)
 };
 exports.getWorkBookQuestions = getWorkBookQuestions;
