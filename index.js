@@ -1,5 +1,5 @@
+const { shouldGetCol } = require("./shouldGetCol");
 const { shouldGetCell } = require("./shouldGetCell");
-
 const { buildQuestionData } = require("./buildQuestionData");
 
 if (typeof require !== 'undefined') XLSX = require('xlsx');
@@ -12,18 +12,16 @@ const cols = ["A", "B", "C", "D", "E"];
 SheetNames.map(sheetName => {
     const sheet = Sheets[sheetName]
     const questions = [];
-    const realCols = cols
-        .filter((colName) => sheet[`${colName}1`] && sheet[`${colName}1`].v)
-
+    cols
+        .filter((colName, colIndex) => shouldGetCol({ colName, sheet, sheetName, colIndex }))
         .forEach((colName, colIndex) => {
             let count = 1;
-            while (shouldGetCell({ sheet, sheetName, colName, count })) {
+            while (shouldGetCell({ sheet, sheetName, colName, count, colIndex })) {
                 const v = sheet[`${colName}${count}`].v
-                buildQuestionData({ v, colName, sheetName, count, questions })
+                buildQuestionData({ v, colName, sheetName, count, questions, colIndex })
                 count++;
             }
         })
-
     return {
         sheetName,
         questions
