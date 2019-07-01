@@ -1,4 +1,4 @@
-const defaultColCheck = ({ colName, sheet }) => sheet[`${colName}1`] && sheet[`${colName}1`].v;
+const defaultColCheck = ({ sheet, sheetName, colIndex, colName, row  }) => sheet[`${colName}${row}`] && sheet[`${colName}${row}`].v;
 
 module.exports = {
     defaultColCheck,
