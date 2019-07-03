@@ -20,5 +20,3 @@ const countWorkBookQuestions = async () => {
     console.log(docs.length)
 }
 
-
-//loadWorkBookQuestion()

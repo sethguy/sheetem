@@ -32,7 +32,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
         }
         //modsRef.doc().set({ name: sheetName, area: bookName });
         mcount++;
-        console.log("TCL: mcount", mcount)
+        console.log("TCL: mcount", sheetName,mcount)
         return {
             sheetName,
             questions,
@@ -40,7 +40,8 @@ const getWorkBookQuestions = async (workbook, bookName) => {
     })
         .forEach(({ sheetName, questions }) => {
             questions.forEach(async (questionData) => {
-                // await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
+                console.log("TCL: questionData", questionData)
+                //await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
                 qcount++;
                 console.log("TCL: qcount", qcount);
             });
