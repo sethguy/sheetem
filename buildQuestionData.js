@@ -1,8 +1,13 @@
-const { setDefaultQuestion,buildParagraphQuestions,buildComprehensionQuestion,buildOblab,buildYesNo } = require("./questionBuilders");
+const { setDefaultQuestion,buildParagraphQuestions,buildComprehensionQuestion,buildOblab,buildYesNo,adjectivesNVerbs } = require("./questionBuilders");
 
 const buildQuestionData = (props) => {
     const { colName, v, row, sheetName, questions,colIndex } = props;
+    console.log("TCL: buildQuestionData -> sheetName", sheetName)
 
+    if (sheetName.indexOf('Verbs') > -1 || sheetName.indexOf('Adjectives') > -1) {
+        const question = adjectivesNVerbs({ colName, v, row, sheetName, questions,colIndex });
+        return question;
+    }
 
     if (sheetName.indexOf('Yes and No') > -1) {
         const question = buildYesNo({ colName, v, row, sheetName, questions,colIndex });

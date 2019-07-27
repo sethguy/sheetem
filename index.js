@@ -28,23 +28,22 @@ if (typeof require !== 'undefined') XLSX = require('xlsx');
 const loadQuestionSheet = () => {
     const books = fs.readdirSync('./books');
 
-    var workbook = XLSX.readFile(`./books/Receptive Language Final.xlsx`);
-    getWorkBookQuestions(workbook, "Receptive Language")
+    var workbook = XLSX.readFile(`./books/Expressive Language Final.xlsx`);
+    getWorkBookQuestions(workbook, "Expressive Language")
 }
 
 
+// const updatequestionSet = async () => {
+//     const set = await questionsRef.where('moduleName', '==', 'Yes and No').get()
+//     console.log("TCL: updatequestionSet -> set")
 
-const updatequestionSet = async () => {
-    const set = await questionsRef.where('moduleName', '==', 'Yes and No').get()
-    console.log("TCL: updatequestionSet -> set")
+//     set.docs.map(async (doc) => {
 
-    set.docs.map(async (doc) => {
+//         //  await  questionsRef.doc(doc.id).update({moduleName:'Yes and No 3'})
 
-        //  await  questionsRef.doc(doc.id).update({moduleName:'Yes and No 3'})
+//     })
 
-    })
-
-}
+// }
 
 
 

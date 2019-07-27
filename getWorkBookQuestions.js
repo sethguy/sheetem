@@ -16,43 +16,44 @@ let acount = 0;
 
 const sets = [];
 
-const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
+const loadAll = false;
+
+//const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
+
+const goodSheets = ['Verbs', 'Adjectives'];
 
 const getWorkBookQuestions = async (workbook, bookName) => {
     const { SheetNames, Sheets } = workbook;
     const SheetQuestions = SheetNames.filter(name => {
-   // console.log("TCL: getWorkBookQuestions -> name", name)
-
-
-        return goodSheets.indexOf(name) >-1
-
-    }).map(sheetName => {
-        const sheet = Sheets[sheetName];
-        const questions = [];
-        let row = 1;
-        while (shouldGetRow({ sheet, sheetName, row, bookName })) {
-            let colIndex = 0;
-            let colName = String.fromCharCode(65 + colIndex);
-            while (shouldGetCol({ sheet, sheetName, colIndex, colName, row, bookName })) {
-                const cell = sheet[`${colName}${row}`] || {};
-                const v = cell.v;
-                buildQuestionData({ v, colName, sheetName, row, questions, colIndex, bookName });
-                colIndex++;
-                colName = String.fromCharCode(65 + colIndex);
+        // console.log("TCL: getWorkBookQuestions -> name", name)
+        return loadAll || goodSheets.indexOf(name) > -1
+    })
+        .map(sheetName => {
+            const sheet = Sheets[sheetName];
+            const questions = [];
+            let row = 1;
+            while (shouldGetRow({ sheet, sheetName, row, bookName })) {
+                let colIndex = 0;
+                let colName = String.fromCharCode(65 + colIndex);
+                while (shouldGetCol({ sheet, sheetName, colIndex, colName, row, bookName })) {
+                    const cell = sheet[`${colName}${row}`] || {};
+                    const v = cell.v;
+                    buildQuestionData({ v, colName, sheetName, row, questions, colIndex, bookName });
+                    colIndex++;
+                    colName = String.fromCharCode(65 + colIndex);
+                }
+                row++;
             }
-            row++;
-        }
-        //modsRef.doc().set({ name: sheetName, area: bookName });
-        mcount++;
-        console.log("TCL: mcount", sheetName, mcount)
-        return {
-            sheetName,
-            questions,
-        };
-    });
+            //modsRef.doc().set({ name: sheetName, area: bookName });
+            mcount++;
+            //console.log("TCL: mcount", sheetName, mcount)
+            return {
+                sheetName,
+                questions,
+            };
+        });
 
-    require('fs').writeFileSync('./fountain.js', JSON.stringify(SheetQuestions))
-
+     require('fs').writeFileSync('./AdjectivesNVerbs.js', JSON.stringify(SheetQuestions))
 
     SheetQuestions.forEach(({ sheetName, questions }) => {
         console.log("TCL: sheetName", sheetName)
