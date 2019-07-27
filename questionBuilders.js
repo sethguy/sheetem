@@ -20,6 +20,56 @@ const setDefaultQuestion = (props) => {
 };
 
 
+
+const buildYesNo = (props) => {
+    const { colName, v, row, sheetName, questions, colIndex } = props;
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName }
+
+        if (sheetName.indexOf('1') > -1) {
+
+            question.challangePicture = v;
+
+        } else {
+            question.challangeAudio = v;
+
+
+        }
+        questions.push(question)
+    }
+    if (colIndex == 1) {
+        const question = questions[row - 1]
+        question.challangeText = v;
+    }
+    if (colIndex == 2) {
+        const question = questions[row - 1]
+        question.answerText = v;
+    }
+};
+
+
+const buildOblab = (props) => {
+    const { colName, v, row, sheetName, questions, colIndex } = props;
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongPictures: [], rightPicture: [] }
+        question.challangeAudio = v;
+        questions.push(question)
+    }
+    if (colIndex == 1) {
+        const question = questions[row - 1]
+        question.answerText = v;
+    }
+    if (colIndex == 2) {
+        const question = questions[row - 1]
+        question.rightPicture.push(v)
+    }
+    if (colIndex > 2) {
+        const question = questions[row - 1]
+        question.wrongPictures.push(v)
+    }
+};
+
+
 const buildComprehensionQuestion = (props) => {
     const { colName, v, row, sheetName, questions, colIndex } = props;
     if (colIndex == 0) {
@@ -68,4 +118,6 @@ module.exports = {
     setDefaultQuestion,
     buildParagraphQuestions,
     buildComprehensionQuestion,
+    buildOblab,
+    buildYesNo,
 }

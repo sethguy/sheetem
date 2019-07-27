@@ -12,9 +12,21 @@ const { buildQuestionData } = require("./buildQuestionData");
 let qcount = 0;
 let mcount = 0;
 let acount = 0;
+
+
+const sets = [];
+
+const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
+
 const getWorkBookQuestions = async (workbook, bookName) => {
     const { SheetNames, Sheets } = workbook;
-    const SheetQuestions = SheetNames.map(sheetName => {
+    const SheetQuestions = SheetNames.filter(name => {
+   // console.log("TCL: getWorkBookQuestions -> name", name)
+
+
+        return goodSheets.indexOf(name) >-1
+
+    }).map(sheetName => {
         const sheet = Sheets[sheetName];
         const questions = [];
         let row = 1;
@@ -32,20 +44,25 @@ const getWorkBookQuestions = async (workbook, bookName) => {
         }
         //modsRef.doc().set({ name: sheetName, area: bookName });
         mcount++;
-        console.log("TCL: mcount", sheetName,mcount)
+        console.log("TCL: mcount", sheetName, mcount)
         return {
             sheetName,
             questions,
         };
-    })
-        .forEach(({ sheetName, questions }) => {
-            questions.forEach(async (questionData) => {
-                console.log("TCL: questionData", questionData)
-                //await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
-                qcount++;
-                console.log("TCL: qcount", qcount);
-            });
+    });
+
+    require('fs').writeFileSync('./fountain.js', JSON.stringify(SheetQuestions))
+
+
+    SheetQuestions.forEach(({ sheetName, questions }) => {
+        console.log("TCL: sheetName", sheetName)
+        questions.forEach(async (questionData) => {
+            // console.log("TCL: questionData", questionData)
+            //await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
+            qcount++;
+            // console.log("TCL: qcount", qcount);
         });
+    });
     acount++;
     //await areasRef.doc().set({ name: bookName })
     console.log("TCL: acount", acount)
