@@ -26,12 +26,12 @@ if (typeof require !== 'undefined') XLSX = require('xlsx');
 // }
 
 const loadQuestionSheet = () => {
-    var workbook = XLSX.readFile(`./books/Following Directions.xlsx`);
+    var workbook = XLSX.readFile(`./books/Receptive Language Final.xlsx`);
     getWorkBookQuestions(workbook, "Receptive Language")
 }
 
 
-
+loadQuestionSheet();
 
 
 // const updatequestionSet = async () => {
@@ -48,3 +48,36 @@ const loadQuestionSheet = () => {
 
 
 
+
+
+
+
+// const db = firebase.firestore();
+// const questionsRef = db.collection('sheetQuestions');
+
+
+// SheetQuestions.forEach(({ sheetName, questions }) => {
+//   //console.log("TCL: sheetName", sheetName)
+//   questions.forEach(async (questionData) => {
+//    // await questionsRef.doc().set({ ...questionData, areaOfConcentraion: "Communication" })
+//   // console.log("TCL: questionData", questionData)
+
+//   });
+// });
+
+
+// (async () => {
+//   const f1 = await questionsRef.where('moduleName', '==', 'Sentence Comprehension 1').get();
+//   const f2 = await questionsRef.where('moduleName', '==', 'Sentence Comprehension 2').get();
+//   const f3 = await questionsRef.where('moduleName', '==', 'Sentence Comprehension 3').get();
+
+//   const set = [...f1.docs, ...f2.docs, ...f3.docs,];
+//   console.log("TCL: set", set)
+//   set.forEach(async (doc) => {
+
+//     await questionsRef.doc(doc.id).delete()
+//     console.log("TCL: data", doc.data())
+
+//   })
+
+// })()

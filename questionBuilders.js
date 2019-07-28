@@ -115,15 +115,19 @@ const buildComprehensionQuestion = (props) => {
     }
     if (colIndex == 1) {
         const question = questions[row - 1]
-        question.challange = v;
+        question.statementAudio = v;
     }
     if (colIndex == 2) {
         const question = questions[row - 1]
+        question.challangeText = v;
+    }
+    if (colIndex === 3) {
+        const question = questions[row - 1]
         question.answerText = v;
     }
-    if (colIndex > 2) {
+    if (colIndex > 3) {
         const question = questions[row - 1]
-        question.wrongAnswerText.push(v)
+        question.wrongAnswerText.push(v);
     }
 };
 

@@ -16,11 +16,11 @@ let acount = 0;
 
 const sets = [];
 
-const loadAll = true;
+const loadAll = false
 
 //const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
 
-const goodSheets = ['Verbs', 'Adjectives'];
+const goodSheets = ['Sentence Comprehension 1', 'Sentence Comprehension 2', 'Sentence Comprehension 3'];
 
 const getWorkBookQuestions = async (workbook, bookName) => {
     const { SheetNames, Sheets } = workbook;
@@ -53,7 +53,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-     require('fs').writeFileSync('./FollowingDirections.js', JSON.stringify(SheetQuestions))
+    require('fs').writeFileSync('./SentenceComprehension.js', JSON.stringify(SheetQuestions))
 
     SheetQuestions.forEach(({ sheetName, questions }) => {
         console.log("TCL: sheetName", sheetName)
