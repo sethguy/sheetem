@@ -16,7 +16,7 @@ let acount = 0;
 
 const sets = [];
 
-const loadAll = false;
+const loadAll = true;
 
 //const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
 
@@ -53,7 +53,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-     require('fs').writeFileSync('./AdjectivesNVerbs.js', JSON.stringify(SheetQuestions))
+     require('fs').writeFileSync('./FollowingDirections.js', JSON.stringify(SheetQuestions))
 
     SheetQuestions.forEach(({ sheetName, questions }) => {
         console.log("TCL: sheetName", sheetName)

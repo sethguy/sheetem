@@ -26,11 +26,12 @@ if (typeof require !== 'undefined') XLSX = require('xlsx');
 // }
 
 const loadQuestionSheet = () => {
-    const books = fs.readdirSync('./books');
-
-    var workbook = XLSX.readFile(`./books/Expressive Language Final.xlsx`);
-    getWorkBookQuestions(workbook, "Expressive Language")
+    var workbook = XLSX.readFile(`./books/Following Directions.xlsx`);
+    getWorkBookQuestions(workbook, "Receptive Language")
 }
+
+
+
 
 
 // const updatequestionSet = async () => {
