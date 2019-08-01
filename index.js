@@ -81,3 +81,49 @@ loadQuestionSheet();
 //   })
 
 // })()
+
+
+
+
+
+/**
+ 
+
+var storage = firebase.storage();
+
+var sizeOf = require('image-size');
+
+const items = [];
+
+// Create a storage reference from our storage service
+const storageRef = storage.ref();
+
+(async () => {
+
+  const results = await storageRef.listAll()
+
+  results.prefixes.forEach(async (folderRef) => {
+    // All the prefixes under listRef.
+    // You may call listAll() recursively on them.
+
+    const folderRefRes = await folderRef.listAll();
+    // console.log("TCL: folderRef", folderRef.name);
+
+    // console.log("TCL: folderRefRes", folderRefRes.items.map(item => item.name))
+
+    folderRefRes.items.forEach(function (itemRef) {
+      console.log("TCL: itemRef", itemRef)
+        // All the items under listRef.
+
+        var spaceRef = storageRef.child(itemRef.fullPath);
+        console.log("TCL: spaceRef", spaceRef)
+
+      });
+
+  });
+
+})();
+
+
+
+ *  */
