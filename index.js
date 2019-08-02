@@ -2,6 +2,9 @@ const { getWorkBookQuestions } = require("./getWorkBookQuestions");
 const firebase = require('./firebase');
 const db = firebase.firestore();
 
+
+const {loadModDescriptions}  = require("./loadModDescriptions");
+
 const tagsRef = db.collection('questionTags');
 const questionsRef = db.collection('sheetQuestions');
 const modsRef = db.collection('sheetMods');
@@ -25,14 +28,11 @@ if (typeof require !== 'undefined') XLSX = require('xlsx');
 //     console.log(docs.length)
 // }
 
-const loadQuestionSheet = () => {
-    var workbook = XLSX.readFile(`./books/Receptive Language Final.xlsx`);
-    getWorkBookQuestions(workbook, "Receptive Language")
+ const loadQuestionSheet = () => {
+  var workbook = XLSX.readFile(`./books/App Directions.xlsx`);
+  loadModDescriptions(workbook, "Receptive Language")
 }
-
-
 loadQuestionSheet();
-
 
 // const updatequestionSet = async () => {
 //     const set = await questionsRef.where('moduleName', '==', 'Yes and No').get()
