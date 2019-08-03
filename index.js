@@ -2,7 +2,7 @@ const { getWorkBookQuestions } = require("./getWorkBookQuestions");
 const firebase = require('./firebase');
 const db = firebase.firestore();
 
-
+//Object Naming
 const {loadModDescriptions}  = require("./loadModDescriptions");
 
 const tagsRef = db.collection('questionTags');
@@ -12,13 +12,13 @@ const fs = require('fs');
 
 if (typeof require !== 'undefined') XLSX = require('xlsx');
 
-// const loadWorkBookQuestion = () => {
-//     const books = fs.readdirSync('./books')
-//     books.forEach((bookName) => {
-//         var workbook = XLSX.readFile(`./books/${bookName}`);
-//         getWorkBookQuestions(workbook, bookName.replace('.xlsx', ''))
-//     })
-// }
+const loadWorkBookQuestion = () => {
+    const books = fs.readdirSync('./books')
+    books.forEach((bookName) => {
+        var workbook = XLSX.readFile(`./books/${bookName}`);
+        getWorkBookQuestions(workbook, bookName.replace('.xlsx', ''))
+    })
+}
 
 // const countWorkBookQuestions = async () => {
 //     const firebase = require('./firebase');
@@ -28,12 +28,10 @@ if (typeof require !== 'undefined') XLSX = require('xlsx');
 //     console.log(docs.length)
 // }
 
- const loadQuestionSheet = () => {
-  var workbook = XLSX.readFile(`./books/App Directions.xlsx`);
-  loadModDescriptions(workbook, "Receptive Language")
-}
-loadQuestionSheet();
-
+//  const loadQuestionSheet = () => {
+//   var workbook = XLSX.readFile(`./books/Expressive Language Final.xlsx`);
+//   getWorkBookQuestions(workbook,'Expressive Language');
+// }
 // const updatequestionSet = async () => {
 //     const set = await questionsRef.where('moduleName', '==', 'Yes and No').get()
 //     console.log("TCL: updatequestionSet -> set")
@@ -64,6 +62,9 @@ loadQuestionSheet();
 
 //   });
 // });
+
+
+
 
 
 // (async () => {

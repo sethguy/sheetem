@@ -1,8 +1,12 @@
-const { setDefaultQuestion,buildParagraphQuestions,buildComprehensionQuestion,buildOblab,buildYesNo,adjectivesNVerbs,followingDirections } = require("./questionBuilders");
+const { setDefaultQuestion,buildParagraphQuestions,buildComprehensionQuestion,buildOblab,buildYesNo,adjectivesNVerbs,followingDirections,objectNameQuestions } = require("./questionBuilders");
 
 const buildQuestionData = (props) => {
     const { colName, v, row, sheetName, questions,colIndex } = props;
-    console.log("TCL: buildQuestionData -> sheetName", sheetName)
+
+    if (sheetName.indexOf('Object Naming') > -1) {
+        const question = objectNameQuestions({ colName, v, row, sheetName, questions,colIndex });
+        return question;
+    }
 
     if (sheetName.indexOf('Following Directions') > -1) {
         const question = followingDirections({ colName, v, row, sheetName, questions,colIndex });

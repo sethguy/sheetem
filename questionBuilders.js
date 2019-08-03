@@ -106,6 +106,24 @@ const buildOblab = (props) => {
 };
 
 
+const objectNameQuestions = (props) => {
+    const { colName, v, row, sheetName, questions, colIndex } = props;
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName }
+        question.word = v;
+        questions.push(question)
+    }
+    if (colIndex == 1) {
+        const question = questions[row - 1]
+        question.audio = v;
+    }
+    if (colIndex == 2) {
+        const question = questions[row - 1]
+        question.imgSrc = v;
+    }
+};
+
+
 const buildComprehensionQuestion = (props) => {
     const { colName, v, row, sheetName, questions, colIndex } = props;
     if (colIndex == 0) {
@@ -159,6 +177,7 @@ module.exports = {
     buildParagraphQuestions,
     buildComprehensionQuestion,
     buildOblab,
+    objectNameQuestions,
     buildYesNo,
     adjectivesNVerbs,
     followingDirections,

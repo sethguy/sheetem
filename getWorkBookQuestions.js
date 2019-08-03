@@ -20,15 +20,17 @@ const loadAll = false
 
 //const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
 
-const goodSheets = ['Sentence Comprehension 1', 'Sentence Comprehension 2', 'Sentence Comprehension 3'];
+const goodSheets = ['Object Naming'];
 
 const getWorkBookQuestions = async (workbook, bookName) => {
     const { SheetNames, Sheets } = workbook;
+    console.log("TCL: getWorkBookQuestions ->  SheetNames, Sheets",  SheetNames)
     const SheetQuestions = SheetNames.filter(name => {
         // console.log("TCL: getWorkBookQuestions -> name", name)
         return loadAll || goodSheets.indexOf(name) > -1
     })
         .map(sheetName => {
+        console.log("TCL: getWorkBookQuestions -> sheetName", sheetName)
             const sheet = Sheets[sheetName];
             const questions = [];
             let row = 1;
@@ -53,7 +55,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-    require('fs').writeFileSync('./SentenceComprehension.js', JSON.stringify(SheetQuestions))
+    require('fs').writeFileSync('./Object Naming.js', JSON.stringify(SheetQuestions))
 
     SheetQuestions.forEach(({ sheetName, questions }) => {
         console.log("TCL: sheetName", sheetName)
