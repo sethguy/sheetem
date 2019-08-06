@@ -20,7 +20,7 @@ const loadAll = false
 
 //const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
 
-const goodSheets = ['Object Naming'];
+const goodSheets = ['Paragraph','Paragraph 1'];
 
 const getWorkBookQuestions = async (workbook, bookName) => {
     const { SheetNames, Sheets } = workbook;
@@ -39,8 +39,13 @@ const getWorkBookQuestions = async (workbook, bookName) => {
                 let colName = String.fromCharCode(65 + colIndex);
                 while (shouldGetCol({ sheet, sheetName, colIndex, colName, row, bookName })) {
                     const cell = sheet[`${colName}${row}`] || {};
-                    const v = cell.v;
-                    buildQuestionData({ v, colName, sheetName, row, questions, colIndex, bookName });
+                    let v = cell.v;
+
+                    if (typeof v == 'num') {
+
+                        v = `${v}`
+                    }
+                    buildQuestionData({ v, colName, sheetName, row, questions, colIndex, bookName,sheet });
                     colIndex++;
                     colName = String.fromCharCode(65 + colIndex);
                 }
@@ -55,7 +60,38 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-    require('fs').writeFileSync('./Object Naming.js', JSON.stringify(SheetQuestions))
+    require('fs').writeFileSync('./Paragraph.js', `
+    
+    const set = ${JSON.stringify(SheetQuestions,null,2)};
+    
+    const sets = [...set[0].questions, ...set[1].questions];
+
+    sets.map((question,index) => {
+    const { questionSet } = question;
+
+    questionSet.forEach(({ wrongAnswerText, answerText }) => {
+
+        if (!answerText || !wrongAnswerText || wrongAnswerText.length == 0) {
+            console.log(index)
+             
+            console.log({wrongAnswerText, answerText})
+
+        console.log( question.moduleName)
+        console.log( question.statement)
+        
+        console.log(" ")
+
+        }
+
+    })
+
+    return question;
+    })
+
+
+
+
+    `)
 
     SheetQuestions.forEach(({ sheetName, questions }) => {
         console.log("TCL: sheetName", sheetName)

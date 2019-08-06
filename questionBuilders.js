@@ -150,13 +150,23 @@ const buildComprehensionQuestion = (props) => {
 };
 
 const buildParagraphQuestions = (props) => {
-    const { colName, v, row, sheetName, questions, colIndex } = props;
+    const { colName, row, sheetName, questions, colIndex, sheet } = props;
+
+    let v = props.v
+
+    if (typeof v == 'number') {
+        v = `${v}`
+    }
+
     if (colIndex == 0 && v && v.length) {
         const question = { questionSet: [], moduleName: sheetName }
         question.statement = v;
         questions.push(question);
+
     } else if (v && v.length) {
+
         const question = questions[questions.length - 1]
+
         const { questionSet } = question;
         if (colIndex == 1) {
             questionSet.push({ challange: v, wrongAnswerText: [] })

@@ -28,10 +28,11 @@ const loadWorkBookQuestion = () => {
 //     console.log(docs.length)
 // }
 
-//  const loadQuestionSheet = () => {
-//   var workbook = XLSX.readFile(`./books/Expressive Language Final.xlsx`);
-//   getWorkBookQuestions(workbook,'Expressive Language');
-// }
+ const loadQuestionSheet = () => {
+  var workbook = XLSX.readFile(`./books/Receptive Language Final.xlsx`);
+  getWorkBookQuestions(workbook,'Receptive Language');
+}
+
 // const updatequestionSet = async () => {
 //     const set = await questionsRef.where('moduleName', '==', 'Yes and No').get()
 //     console.log("TCL: updatequestionSet -> set")
@@ -65,7 +66,8 @@ const loadWorkBookQuestion = () => {
 
 
 
-
+// const db = firebase.firestore();
+// const questionsRef = db.collection('sheetQuestions');
 
 // (async () => {
 //   const f1 = await questionsRef.where('moduleName', '==', 'Sentence Comprehension 1').get();

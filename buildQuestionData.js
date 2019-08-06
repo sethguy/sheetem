@@ -1,7 +1,7 @@
 const { setDefaultQuestion,buildParagraphQuestions,buildComprehensionQuestion,buildOblab,buildYesNo,adjectivesNVerbs,followingDirections,objectNameQuestions } = require("./questionBuilders");
 
 const buildQuestionData = (props) => {
-    const { colName, v, row, sheetName, questions,colIndex } = props;
+    const { colName, v, row, sheetName, questions,colIndex ,sheet } = props;
 
     if (sheetName.indexOf('Object Naming') > -1) {
         const question = objectNameQuestions({ colName, v, row, sheetName, questions,colIndex });
@@ -34,7 +34,7 @@ const buildQuestionData = (props) => {
     }
 
     if (sheetName.indexOf('Para') > -1) {
-        const question = buildParagraphQuestions({ colName, v, row, sheetName, questions,colIndex });
+        const question = buildParagraphQuestions({ colName, v, row, sheetName, questions,colIndex ,sheet});
         return question;
     }
 
