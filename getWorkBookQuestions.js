@@ -16,7 +16,7 @@ let acount = 0;
 
 const sets = [];
 
-const loadAll = false
+const loadAll = true
 
 //const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
 
@@ -60,37 +60,10 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-    require('fs').writeFileSync('./Paragraph.js', `
+    require('fs').writeFileSync('./clinMods.js', `
     
     const set = ${JSON.stringify(SheetQuestions,null,2)};
     
-    const sets = [...set[0].questions, ...set[1].questions];
-
-    sets.map((question,index) => {
-    const { questionSet } = question;
-
-    questionSet.forEach(({ wrongAnswerText, answerText }) => {
-
-        if (!answerText || !wrongAnswerText || wrongAnswerText.length == 0) {
-            console.log(index)
-             
-            console.log({wrongAnswerText, answerText})
-
-        console.log( question.moduleName)
-        console.log( question.statement)
-        
-        console.log(" ")
-
-        }
-
-    })
-
-    return question;
-    })
-
-
-
-
     `)
 
     SheetQuestions.forEach(({ sheetName, questions }) => {

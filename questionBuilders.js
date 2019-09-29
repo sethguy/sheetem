@@ -19,6 +19,9 @@ const setDefaultQuestion = (props) => {
     }
 };
 
+
+
+
 const followingDirections = (props) => {
     const { colName, v, row, sheetName, questions, colIndex } = props;
     if (colIndex == 0) {
@@ -182,7 +185,38 @@ const buildParagraphQuestions = (props) => {
     }
 }
 
+const semFea = (props) => {
+    const { colName, v, row, sheetName, questions, colIndex } = props;
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.challangePicture = v;
+
+        questions.push(question);
+    }
+    if (colIndex == 1) {
+        const question = questions[row - 1];
+        question.challangeText = v;
+
+    }
+
+};
+
+
+const genName = (props) => {
+    const { colName, v, row, sheetName, questions, colIndex } = props;
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.challangeText = v;
+        questions.push(question);
+    }
+
+};
+
+
+
 module.exports = {
+    semFea,
+    genName,
     setDefaultQuestion,
     buildParagraphQuestions,
     buildComprehensionQuestion,

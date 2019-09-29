@@ -29,10 +29,10 @@ const loadWorkBookQuestion = () => {
 // }
 
  const loadQuestionSheet = () => {
-  var workbook = XLSX.readFile(`./books/Receptive Language Final.xlsx`);
-  getWorkBookQuestions(workbook,'Receptive Language');
+  var workbook = XLSX.readFile(`./books/Clinician Version.xlsx`);
+  getWorkBookQuestions(workbook,'Clinican Modules');
 }
-
+loadQuestionSheet()
 // const updatequestionSet = async () => {
 //     const set = await questionsRef.where('moduleName', '==', 'Yes and No').get()
 //     console.log("TCL: updatequestionSet -> set")
