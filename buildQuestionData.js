@@ -13,7 +13,7 @@ const buildQuestionData = (props) => {
         return question;
     }
 
-    if (sheetName.indexOf('Verbs') > -1 || sheetName.indexOf('Adjectives') > -1) {
+    if (sheetName.indexOf('Verbs') > -1 || sheetName.indexOf('Adjectives') > -1 || sheetName.indexOf('Categories 1') > -1) {
         const question = adjectivesNVerbs({ colName, v, row, sheetName, questions, colIndex });
         return question;
     }
@@ -38,13 +38,13 @@ const buildQuestionData = (props) => {
         return question;
     }
 
-    if (sheetName.indexOf('Naming Semantic Feature Chart') > -1) {
-           const question = semFea({ colName, v, row, sheetName, questions,colIndex ,sheet});
+    if (sheetName.indexOf('Naming Semantic Feature Chart') > -1  || sheetName.indexOf('Picture Description') > -1) {
+        const question = semFea({ colName, v, row, sheetName, questions, colIndex, sheet });
         return question;
     }
-
-    if (sheetName.indexOf('Generative Naming') > -1) {
-         const question = genName({ colName, v, row, sheetName, questions,colIndex ,sheet});
+    
+    if (sheetName.indexOf('Generative Naming') > -1 || sheetName.indexOf('Conversation Starter') > -1) {
+        const question = genName({ colName, v, row, sheetName, questions, colIndex, sheet });
         return question;
     }
 

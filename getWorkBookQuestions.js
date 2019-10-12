@@ -16,11 +16,11 @@ let acount = 0;
 
 const sets = [];
 
-const loadAll = true
+const loadAll = false
 
 //const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
 
-const goodSheets = ['Paragraph','Paragraph 1'];
+const goodSheets = ['Categories 1','Conversation Starter','Picture Description'];
 
 const getWorkBookQuestions = async (workbook, bookName) => {
     const { SheetNames, Sheets } = workbook;
@@ -60,7 +60,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-    require('fs').writeFileSync('./clinMods.js', `
+    require('fs').writeFileSync('./converStartANDPicDes.js', `
     
     const set = ${JSON.stringify(SheetQuestions,null,2)};
     
