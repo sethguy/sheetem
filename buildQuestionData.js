@@ -1,4 +1,4 @@
-const { semFea, genName, setDefaultQuestion, buildParagraphQuestions, buildComprehensionQuestion, buildOblab, buildYesNo, adjectivesNVerbs, followingDirections, objectNameQuestions } = require("./questionBuilders");
+const { semFea, genName,buildRecallQuestions,buildParagraphRecallQuestions,namesFaces, setDefaultQuestion, buildParagraphQuestions, buildComprehensionQuestion, buildOblab, buildYesNo, adjectivesNVerbs, followingDirections, objectNameQuestions } = require("./questionBuilders");
 
 const buildQuestionData = (props) => {
     const { colName, v, row, sheetName, questions, colIndex, sheet } = props;
@@ -33,12 +33,29 @@ const buildQuestionData = (props) => {
         return question;
     }
 
+    if (sheetName.indexOf('Paragraph Recall') > -1) {
+        const question = buildParagraphRecallQuestions({ colName, v, row, sheetName, questions, colIndex, sheet });
+        return question;
+    }
+
+    
     if (sheetName.indexOf('Para') > -1) {
         const question = buildParagraphQuestions({ colName, v, row, sheetName, questions, colIndex, sheet });
         return question;
     }
 
-    if (sheetName.indexOf('Naming Semantic Feature Chart') > -1  || sheetName.indexOf('Picture Description') > -1) {
+    if (sheetName.indexOf('Picture Recall') > -1  || sheetName.indexOf('Voicemail Recall') > -1) {
+        const question = buildRecallQuestions({ colName, v, row, sheetName, questions, colIndex, sheet });
+        return question;
+    }
+
+
+    if (sheetName.indexOf('Names') > -1) {
+        const question = namesFaces({ colName, v, row, sheetName, questions, colIndex, sheet });
+        return question;
+    }
+
+    if ( sheetName.indexOf('Object Recall') > -1 || sheetName.indexOf('Naming Semantic Feature Chart') > -1  || sheetName.indexOf('Picture Description') > -1) {
         const question = semFea({ colName, v, row, sheetName, questions, colIndex, sheet });
         return question;
     }

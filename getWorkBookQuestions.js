@@ -16,7 +16,7 @@ let acount = 0;
 
 const sets = [];
 
-const loadAll = false
+const loadAll = true
 
 //const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
 
@@ -60,15 +60,16 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-    require('fs').writeFileSync('./converStartANDPicDes.js', `
+    require('fs').writeFileSync('./memorgi.js', `
     
     const set = ${JSON.stringify(SheetQuestions,null,2)};
     
     `)
 
     SheetQuestions.forEach(({ sheetName, questions }) => {
-        console.log("TCL: sheetName", sheetName)
+       // console.log("TCL: sheetName", sheetName)
         questions.forEach(async (questionData) => {
+       // console.log("questionData", questionData)
             // console.log("TCL: questionData", questionData)
             //await questionsRef.doc().set({ ...questionData, areaOfConcentraion: bookName })
             qcount++;
