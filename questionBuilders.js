@@ -152,6 +152,81 @@ const buildComprehensionQuestion = (props) => {
     }
 };
 
+const buildRecallQuestions = (props) => {
+    const { colName, row, sheetName, questions, colIndex, sheet } = props;
+
+    let v = props.v
+
+    if (typeof v == 'number') {
+        v = `${v}`
+    }
+
+    if (colIndex == 0 && v && v.length) {
+        const question = { questionSet: [], moduleName: sheetName }
+        question.statement = v;
+        questions.push(question);
+
+    } else if (v && v.length) {
+
+        const question = questions[questions.length - 1]
+
+        const { questionSet } = question;
+        if (colIndex == 1) {
+            questionSet.push({ image: v, wrongAnswerText: [] })
+        }
+        if (colIndex == 2) {
+            const currentChallange = questionSet[questionSet.length - 1]
+            currentChallange.challange = v
+        }
+        if (colIndex == 3) {
+            const currentChallange = questionSet[questionSet.length - 1]
+            currentChallange.answerText = v
+        }
+        if (colIndex > 3) {
+            const currentChallange = questionSet[questionSet.length - 1]
+            currentChallange.wrongAnswerText.push(v)
+        }
+    }
+}
+
+
+const buildParagraphRecallQuestions = (props) => {
+    const { colName, row, sheetName, questions, colIndex, sheet } = props;
+
+    let v = props.v
+
+    if (typeof v == 'number') {
+        v = `${v}`
+    }
+
+    if (colIndex == 0 && v && v.length) {
+        console.log("buildParagraphRecallQuestions -> colIndex", colIndex,v)
+        const question = { questionSet: [], moduleName: sheetName }
+        question.repeatAudio = v;
+        questions.push(question);
+
+    } else if (v && v.length) {
+
+        const question = questions[questions.length - 1]
+        const { questionSet } = question;
+        if (colIndex == 1) {
+            question.statement = v
+        }
+        if (colIndex == 2) {
+            questionSet.push({ challange: v, wrongAnswerText: [] })
+        }
+        if (colIndex == 3) {
+            const currentChallange = questionSet[questionSet.length - 1]
+            currentChallange.answerText = v
+        }
+        if (colIndex > 3) {
+            const currentChallange = questionSet[questionSet.length - 1]
+            currentChallange.wrongAnswerText.push(v)
+        }
+    }
+}
+
+
 const buildParagraphQuestions = (props) => {
     const { colName, row, sheetName, questions, colIndex, sheet } = props;
 
@@ -185,6 +260,26 @@ const buildParagraphQuestions = (props) => {
     }
 }
 
+const namesFaces = (props) => {
+    const { colName, v, row, sheetName, questions, colIndex } = props;
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.repeatAudio = v;
+
+        questions.push(question);
+    }
+    if (colIndex == 1) {
+        const question = questions[row - 1];
+        question.image = v;
+
+    }
+
+    if (colIndex == 2) {
+        const question = questions[row - 1];
+        question.name = v;
+    }
+
+};
 const semFea = (props) => {
     const { colName, v, row, sheetName, questions, colIndex } = props;
     if (colIndex == 0) {
@@ -216,10 +311,13 @@ const genName = (props) => {
 
 module.exports = {
     semFea,
+    buildRecallQuestions,
     genName,
+    buildParagraphRecallQuestions,
     setDefaultQuestion,
     buildParagraphQuestions,
     buildComprehensionQuestion,
+    namesFaces,
     buildOblab,
     objectNameQuestions,
     buildYesNo,
