@@ -172,7 +172,7 @@ const buildRecallQuestions = (props) => {
 
         const { questionSet } = question;
         if (colIndex == 1) {
-            questionSet.push({ image: v, wrongAnswerText: [] })
+            questionSet.push({ media: v, wrongAnswerText: [] })
         }
         if (colIndex == 2) {
             const currentChallange = questionSet[questionSet.length - 1]
@@ -200,7 +200,6 @@ const buildParagraphRecallQuestions = (props) => {
     }
 
     if (colIndex == 0 && v && v.length) {
-        console.log("buildParagraphRecallQuestions -> colIndex", colIndex,v)
         const question = { questionSet: [], moduleName: sheetName }
         question.repeatAudio = v;
         questions.push(question);

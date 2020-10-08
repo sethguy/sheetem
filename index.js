@@ -30,7 +30,7 @@ const loadWorkBookQuestion = () => {
 
  const loadQuestionSheet = () => {
   var workbook = XLSX.readFile(`./books/Orientation and Memory.xlsx`);
-  getWorkBookQuestions(workbook,'Clinican Modules');
+  getWorkBookQuestions(workbook,'Cognition');
 }
 loadQuestionSheet()
 // const updatequestionSet = async () => {

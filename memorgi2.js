@@ -1,58 +1,6 @@
-const firebase = require('./firebase');
-const db = firebase.firestore();
-const questionsRef = db.collection('sheetQuestions');
-
-
-const signIn = async () => {
-  try {
-    const response = await firebase.auth().signInWithEmailAndPassword('isethguy@gmail.com', 'sethwins')
-  } catch (error) {
-    console.log("signIn -> error", error)
-  }
-}
-
-
-
-const uploadNewQuestions = async () => {
-
-  await signIn()
-
-  // const badguys1 = await questionsRef.where('moduleName','==','Picture Recall').get()
-  // const badguys2 = await questionsRef.where('moduleName','==','Voicemail Recall').get()
-
-  // const allbadd = [...badguys1.docs,...badguys2.docs]
-  // console.log("uploadNewQuestions -> allbadd", allbadd.length)
-
-
-  // // allbadd.map(async(item)=>{
-  // //   console.log("uploadNewQuestions -> item", item)
-
-
-
-  // //  await questionsRef.doc(item.id).delete()
-
-  // //  console.log("uploadNewQuestions -> done", item)
-
-  // // })
-  SheetQuestions.forEach(({ sheetName, questions }) => {
-    // console.log("TCL: sheetName", sheetName)
-    questions.forEach(async (questionData) => {
-      console.log("uploadNewQuestions -> questionData", questionData)
-      // console.log("questionData", questionData)
-      // console.log("TCL: questionData", questionData)
-     //await questionsRef.doc().set({ ...questionData, areaOfConcentraion: 'Cognition', moduleName: sheetName })
-
-      console.log("TCL: qcount", questionData);
-    });
-  });
-}
-
-
-
-
 
     
-const SheetQuestions = [
+  const SheetQuestions = [
   {
     "sheetName": "Picture Recall",
     "questions": [
