@@ -16,7 +16,7 @@ let acount = 0;
 
 const sets = [];
 
-const loadAll = false
+const loadAll = true
 
 //const goodSheets = ['Object Labeling 1', 'Object Labeling 3', 'Yes and No 1', 'Yes and No 2'];
 
@@ -60,7 +60,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-    require('fs').writeFileSync('./memorgi2.js', `
+    require('fs').writeFileSync('./psr2.js', `
     
     const set = ${JSON.stringify(SheetQuestions,null,2)};
     

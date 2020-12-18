@@ -190,6 +190,46 @@ const buildRecallQuestions = (props) => {
 }
 
 
+const basicPlus = (props) => {
+    const { colName, v, row, sheetName, questions, colIndex } = props;
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.title = v;
+        questions.push(question);
+    }
+    if (colIndex == 1) {
+        const question = questions[row - 1];
+        question.challangeText = v;
+    }
+    if (colIndex == 2) {
+        const question = questions[row - 1]
+        question.answerText = v;
+    }
+    if (colIndex > 2) {
+        const question = questions[row - 1];
+        question.wrongAnswerText.push(v);
+    }
+
+}
+
+
+const sequencing  = (props) => {
+    const { colName, v, row, sheetName, questions, colIndex } = props;
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, sequence: [] };
+        question.title = v;
+        questions.push(question);
+    }
+
+    if (colIndex > 0) {
+        const question = questions[row - 1];
+        question.sequence.push(v);
+    }
+
+}
+
+
+
 const buildParagraphRecallQuestions = (props) => {
     const { colName, row, sheetName, questions, colIndex, sheet } = props;
 
@@ -309,6 +349,8 @@ const genName = (props) => {
 
 
 module.exports = {
+    sequencing,
+    basicPlus,
     semFea,
     buildRecallQuestions,
     genName,

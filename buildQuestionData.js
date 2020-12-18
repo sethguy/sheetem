@@ -1,7 +1,40 @@
-const { semFea, genName,buildRecallQuestions,buildParagraphRecallQuestions,namesFaces, setDefaultQuestion, buildParagraphQuestions, buildComprehensionQuestion, buildOblab, buildYesNo, adjectivesNVerbs, followingDirections, objectNameQuestions } = require("./questionBuilders");
+const {
+    
+    sequencing,
+    basicPlus,
+    semFea,
+    genName,
+    buildRecallQuestions,
+    buildParagraphRecallQuestions,
+    namesFaces,
+    setDefaultQuestion,
+    buildParagraphQuestions,
+    buildComprehensionQuestion,
+    buildOblab,
+    buildYesNo,
+    adjectivesNVerbs,
+    followingDirections,
+    objectNameQuestions
+} = require("./questionBuilders");
 
 const buildQuestionData = (props) => {
     const { colName, v, row, sheetName, questions, colIndex, sheet } = props;
+
+    if (sheetName.indexOf('Sequencing') > -1) {
+        const question = sequencing({ colName, v, row, sheetName, questions, colIndex });
+        return question;
+    }   
+    
+    if (sheetName.indexOf('Community Signs & Symbols') > -1) {
+        const question = basicPlus({ colName, v, row, sheetName, questions, colIndex });
+        return question;
+    }
+
+    if (sheetName.indexOf('Functional Reading') > -1) {
+        const question = buildRecallQuestions({ colName, v, row, sheetName, questions, colIndex });
+        return question;
+    }
+
 
     if (sheetName.indexOf('Object Naming') > -1) {
         const question = objectNameQuestions({ colName, v, row, sheetName, questions, colIndex });
@@ -38,13 +71,13 @@ const buildQuestionData = (props) => {
         return question;
     }
 
-    
+
     if (sheetName.indexOf('Para') > -1) {
         const question = buildParagraphQuestions({ colName, v, row, sheetName, questions, colIndex, sheet });
         return question;
     }
 
-    if (sheetName.indexOf('Picture Recall') > -1  || sheetName.indexOf('Voicemail Recall') > -1) {
+    if (sheetName.indexOf('Picture Recall') > -1 || sheetName.indexOf('Voicemail Recall') > -1) {
         const question = buildRecallQuestions({ colName, v, row, sheetName, questions, colIndex, sheet });
         return question;
     }
@@ -55,11 +88,11 @@ const buildQuestionData = (props) => {
         return question;
     }
 
-    if ( sheetName.indexOf('Object Recall') > -1 || sheetName.indexOf('Naming Semantic Feature Chart') > -1  || sheetName.indexOf('Picture Description') > -1) {
+    if (sheetName.indexOf('Object Recall') > -1 || sheetName.indexOf('Naming Semantic Feature Chart') > -1 || sheetName.indexOf('Picture Description') > -1) {
         const question = semFea({ colName, v, row, sheetName, questions, colIndex, sheet });
         return question;
     }
-    
+
     if (sheetName.indexOf('Generative Naming') > -1 || sheetName.indexOf('Conversation Starter') > -1) {
         const question = genName({ colName, v, row, sheetName, questions, colIndex, sheet });
         return question;

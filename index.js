@@ -29,7 +29,7 @@ const loadWorkBookQuestion = () => {
 // }
 
  const loadQuestionSheet = () => {
-  var workbook = XLSX.readFile(`./books/Orientation and Memory.xlsx`);
+  var workbook = XLSX.readFile(`./books/PSR2.xlsx`);
   getWorkBookQuestions(workbook,'Cognition');
 }
 loadQuestionSheet()
