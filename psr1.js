@@ -1,6 +1,4 @@
-
-    
-    const set = [
+const set = [
   {
     "sheetName": "Hypothetical Problems",
     "questions": [
@@ -4032,5 +4030,4 @@
     ]
   }
 ];
-    
-    
+
