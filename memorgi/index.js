@@ -39,9 +39,9 @@ const files = () =>{
   });
 }
 
-files()
-
 const update = async () => {
+
+  await signIn()
 
   const result = await questionsRef.where('moduleName', '==', 'Functional Reading').get()
   //  console.log("update -> result", result.docs.length)
@@ -66,7 +66,14 @@ const update = async () => {
 
     if (name.indexOf('.pdf') > -1) {
 
+    
+      const pngname = `${__dirname}/pngs/${decodeURIComponent(name).replace('/',' ').replace('.pdf','.png')}`
+      console.log("update -> pngname", pngname)
+  
+      const there =  fs.existsSync(pngname)
+      console.log("update -> there", there)
 
+      
      // uploadFile({media})
     }
 
@@ -108,6 +115,9 @@ const update = async () => {
   // // });
 }
 
+update();
+
+
 const uploadFile = async (props) => {
   const { media } = props;
   const getpdfdatapac = {
@@ -127,7 +137,6 @@ const uploadFile = async (props) => {
    const imagePath = await pdfImage.convertPage(0);
 
   //const downloadImageResponse = await getDocPreview(getpdfdatapac)
-
 
   //const { imagePath } = downloadImageResponse
 
