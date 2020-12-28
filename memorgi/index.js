@@ -9,6 +9,9 @@ var os = require('os')
 var axios = require('axios')
 var fs = require('fs')
 
+// const shoppdfbucket = "epicc-admin.appspot.com";
+// const storageRef = firebase.storage()
+
 const signIn = async () => {
   try {
     const response = await firebase.auth().signInWithEmailAndPassword('isethguy@gmail.com', 'sethwins')
@@ -17,24 +20,20 @@ const signIn = async () => {
   }
 }
 
-const files = () =>{
+const files = () => {
 
   fs.readdir(`${__dirname}/pngs/`, (err, files) => {
     files.forEach(file => {
 
+      //  const data =   fs.existsSync(`${__dirname}/pngs/${file}`)
+      //  console.log("files -> data", data)
 
-  //  const data =   fs.existsSync(`${__dirname}/pngs/${file}`)
-  //  console.log("files -> data", data)
+      fs.rename(`${__dirname}/pngs/${file}`, `${__dirname}/pngs/${file.replace('%20', ' ')}`, (err, data) => {
 
-
-      fs.rename(`${__dirname}/pngs/${file}`, `${__dirname}/pngs/${file.replace('%20',' ')}`, (err,data)=>{
-
-      console.log("files -> err,data", err,data)
+        console.log("files -> err,data", err, data)
 
       })
 
-
-      
     });
   });
 }
@@ -46,7 +45,7 @@ const update = async () => {
   const result = await questionsRef.where('moduleName', '==', 'Functional Reading').get()
   //  console.log("update -> result", result.docs.length)
 
-  result.docs.forEach((doc) => {
+  result.docs.forEach(async (doc) => {
     //console.log("update -> doc", doc)
 
     const { questionSet = [] } = doc.data();
@@ -55,6 +54,11 @@ const update = async () => {
     const [one] = questionSet
 
     const { media = '' } = one;
+    console.log("update -> media", media)
+
+
+    
+    console.log("update -> media---9", media.replace('com/o/Functional','com/o/pdfpngx%2FFunctional').replace('Reading%2F','Reading%20').replace('.pdf','.png'))
 
     const paths = media.split('/')
 
@@ -66,15 +70,31 @@ const update = async () => {
 
     if (name.indexOf('.pdf') > -1) {
 
-    
-      const pngname = `${__dirname}/pngs/${decodeURIComponent(name).replace('/',' ').replace('.pdf','.png')}`
-      console.log("update -> pngname", pngname)
-  
-      const there =  fs.existsSync(pngname)
-      console.log("update -> there", there)
+      const justname = decodeURIComponent(name).replace('/', ' ').replace('.pdf', '.png')
+      console.log("update -> justname", justname)
 
-      
-     // uploadFile({media})
+      const pngname = `${__dirname}/pngs/${justname}`
+      console.log("update -> pngname", pngname)
+
+      // const there = fs.existsSync(pngname)
+      // console.log("update -> there", there)
+      // const bucket = storageRef.bucket(shoppdfbucket);
+      // let imageDest = `/funtionalPngs/${pngname}`;
+      // await bucket.upload(imagePath, {
+      //   destination: imageDest,
+      //   metadata: {
+      //     // firebaseStorageDownloadTokens: uuid
+      //     metadata,
+      //   },
+      // });
+      // const [imageUrl] = await bucket
+      //   .file(imageDest)
+      //   .getSignedUrl({
+      //     action: 'read',
+      //     expires: '03-09-2491'
+      //   });
+
+      // uploadFile({media})
     }
 
   })
@@ -117,7 +137,6 @@ const update = async () => {
 
 update();
 
-
 const uploadFile = async (props) => {
   const { media } = props;
   const getpdfdatapac = {
@@ -133,8 +152,8 @@ const uploadFile = async (props) => {
   }
   const { tempFilePath, name } = downloadResponse
 
-   const pdfImage = new PDFImage(tempFilePath);
-   const imagePath = await pdfImage.convertPage(0);
+  const pdfImage = new PDFImage(tempFilePath);
+  const imagePath = await pdfImage.convertPage(0);
 
   //const downloadImageResponse = await getDocPreview(getpdfdatapac)
 
@@ -151,7 +170,7 @@ const uploadFile = async (props) => {
   }
   finally {
     await unlinkAsync(tempFilePath)
-  //  await unlinkAsync(imagePath)
+    //  await unlinkAsync(imagePath)
   }
 };
 
@@ -202,10 +221,10 @@ const downloadPdf = async (props) => {
     const { metadata = {} } = props;
     const { href, } = metadata;
     console.log("downloadPdf -> href", href)
-    
+
     const [name] = href.split('/').reverse();
     const [removed] = name.split('?');
-   // path.dirname()
+    // path.dirname()
     const tempFilePath = path.join(os.tmpdir(), removed);
     const pdfResponse = await axios({
       url: href,
