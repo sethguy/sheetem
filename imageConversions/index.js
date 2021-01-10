@@ -54,11 +54,6 @@ const update = async () => {
     const [one] = questionSet
 
     const { media = '' } = one;
-    console.log("update -> media", media)
-
-
-    
-    console.log("update -> media---9", media.replace('com/o/Functional','com/o/pdfpngx%2FFunctional').replace('Reading%2F','Reading%20').replace('.pdf','.png'))
 
     const paths = media.split('/')
 
@@ -70,11 +65,19 @@ const update = async () => {
 
     if (name.indexOf('.pdf') > -1) {
 
+      // console.log("update -> media", media)
+      // console.log("update -> media---9", media.replace('com/o/Functional','com/o/pdfpngx%2FFunctional').replace('Reading%2F','Reading%20').replace('.pdf','.png'))
+
+      const newLink = media.replace('com/o/Functional', 'com/o/pdfpngx%2FFunctional').replace('Reading%2F', 'Reading%20').replace('.pdf', '.png');
+      console.log("update -> newLink", newLink)
+
+      questionsRef.doc(doc.id).update({ mediaPng: newLink })
+
       const justname = decodeURIComponent(name).replace('/', ' ').replace('.pdf', '.png')
-      console.log("update -> justname", justname)
+      //   console.log("update -> justname", justname)
 
       const pngname = `${__dirname}/pngs/${justname}`
-      console.log("update -> pngname", pngname)
+      //   console.log("update -> pngname", pngname)
 
       // const there = fs.existsSync(pngname)
       // console.log("update -> there", there)
@@ -134,8 +137,6 @@ const update = async () => {
   // //   });
   // // });
 }
-
-update();
 
 const uploadFile = async (props) => {
   const { media } = props;
