@@ -191,7 +191,7 @@ const uploadFile = async (props) => {
   }
   finally {
     await unlinkAsync(tempFilePath)
-      //await unlinkAsync(imagePath)
+      await unlinkAsync(imagePath)
   }
 };
 
