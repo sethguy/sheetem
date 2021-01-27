@@ -9,12 +9,16 @@ var os = require('os')
 var axios = require('axios')
 var fs = require('fs')
 
+
+//const imagemagick = require('imagemagick-native')
 // const shoppdfbucket = "epicc-admin.appspot.com";
-// const storageRef = firebase.storage()
+//const storageRef = firebase.storage()
+
+const password = process.env.EDIT_PASSWORD
 
 const signIn = async () => {
   try {
-    const response = await firebase.auth().signInWithEmailAndPassword('isethguy@gmail.com', 'sethwins')
+    const response = await firebase.auth().signInWithEmailAndPassword('isethguy@gmail.com', password)
   } catch (error) {
     console.log("signIn -> error", error)
   }
@@ -61,22 +65,26 @@ const update = async () => {
 
     const querys = last.split('?')
 
-    const [name] = querys;
+    const [pathway] = querys;
 
-    if (name.indexOf('.pdf') > -1) {
+
+    const [name] = pathway.split('%2F').reverse()
+
+
+    const formated = name.split('%20').join(' ')
+    if (formated.indexOf('.pdf') > -1) {
 
       // console.log("update -> media", media)
       // console.log("update -> media---9", media.replace('com/o/Functional','com/o/pdfpngx%2FFunctional').replace('Reading%2F','Reading%20').replace('.pdf','.png'))
+      uploadFile({ media, formated })
+      console.log("update -> media", formated, name)
 
-      const newLink = media.replace('com/o/Functional', 'com/o/pdfpngx%2FFunctional').replace('Reading%2F', 'Reading%20').replace('.pdf', '.png');
-      console.log("update -> newLink", newLink)
+      //questionsRef.doc(doc.id).update({ mediaPng: newLink })
 
-      questionsRef.doc(doc.id).update({ mediaPng: newLink })
+      // const justname = decodeURIComponent(name).replace('/', ' ').replace('.pdf', '.png')
+      // //   console.log("update -> justname", justname)
 
-      const justname = decodeURIComponent(name).replace('/', ' ').replace('.pdf', '.png')
-      //   console.log("update -> justname", justname)
-
-      const pngname = `${__dirname}/pngs/${justname}`
+      // const pngname = `${__dirname}/pngs/${justname}`
       //   console.log("update -> pngname", pngname)
 
       // const there = fs.existsSync(pngname)
@@ -137,10 +145,11 @@ const update = async () => {
   // //   });
   // // });
 }
-
+update()
 const uploadFile = async (props) => {
-  const { media } = props;
+  const { media, formated } = props;
   const getpdfdatapac = {
+    formated,
     metadata: {
       href: media
     },
@@ -219,14 +228,12 @@ const unlinkAsync = (path) => {
 
 const downloadPdf = async (props) => {
   try {
-    const { metadata = {} } = props;
+    const { metadata = {}, formated } = props;
     const { href, } = metadata;
-    console.log("downloadPdf -> href", href)
+    console.log("downloadPdf -> formated", formated)
 
-    const [name] = href.split('/').reverse();
-    const [removed] = name.split('?');
     // path.dirname()
-    const tempFilePath = path.join(os.tmpdir(), removed);
+    const tempFilePath = path.join(__dirname, formated);
     const pdfResponse = await axios({
       url: href,
       method: 'GET',
@@ -235,7 +242,7 @@ const downloadPdf = async (props) => {
     await writeFileAsync(tempFilePath, pdfResponse.data);
     return {
       tempFilePath,
-      name: removed,
+      name: formated,
     };
   }
   catch (error) {
