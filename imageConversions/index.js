@@ -9,6 +9,7 @@ var os = require('os')
 var axios = require('axios')
 var fs = require('fs')
 
+var gm = require('gm'); 
 
 //const imagemagick = require('imagemagick-native')
 // const shoppdfbucket = "epicc-admin.appspot.com";
@@ -166,11 +167,19 @@ const uploadFile = async (props) => {
   const imagePath = await pdfImage.convertPage(0);
 
 
-  fs.renameSync(imagePath,imagePath.replace('-0',''))
+  //fs.renameSync(imagePath,)
   //const downloadImageResponse = await getDocPreview(getpdfdatapac)
 
   //const { imagePath } = downloadImageResponse
-
+  gm(imagePath) 
+  
+  // Invoke trim function  
+  .trim() 
+    
+  // Process and Write the image 
+  .write(imagePath.replace('-0',''), function (err) { 
+      if (!err) console.log('done'); 
+  });
   const [extn] = name.split('.').reverse()
   console.log("TCL: uploadFile -> name", name)
   console.log("TCL: uploadFile -> extn", extn)
@@ -182,7 +191,7 @@ const uploadFile = async (props) => {
   }
   finally {
     await unlinkAsync(tempFilePath)
-    //  await unlinkAsync(imagePath)
+      await unlinkAsync(imagePath)
   }
 };
 
