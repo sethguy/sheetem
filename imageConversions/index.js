@@ -165,6 +165,8 @@ const uploadFile = async (props) => {
   const pdfImage = new PDFImage(tempFilePath);
   const imagePath = await pdfImage.convertPage(0);
 
+
+  fs.renameSync(imagePath,imagePath.replace('-0',''))
   //const downloadImageResponse = await getDocPreview(getpdfdatapac)
 
   //const { imagePath } = downloadImageResponse
