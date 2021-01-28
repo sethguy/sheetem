@@ -9,7 +9,7 @@ var os = require('os')
 var axios = require('axios')
 var fs = require('fs')
 
-var gm = require('gm'); 
+var gm = require('gm');
 
 //const imagemagick = require('imagemagick-native')
 // const shoppdfbucket = "epicc-admin.appspot.com";
@@ -59,6 +59,9 @@ const update = async () => {
     const [one] = questionSet
 
     const { media = '' } = one;
+    console.log("update -> media", media)
+
+    const splits = media.split('%2F')
 
     const paths = media.split('/')
 
@@ -77,10 +80,19 @@ const update = async () => {
 
       // console.log("update -> media", media)
       // console.log("update -> media---9", media.replace('com/o/Functional','com/o/pdfpngx%2FFunctional').replace('Reading%2F','Reading%20').replace('.pdf','.png'))
-      uploadFile({ media, formated })
+      // uploadFile({ media, formated })
       console.log("update -> media", formated, name)
 
-      //questionsRef.doc(doc.id).update({ mediaPng: newLink })
+
+      const [first] = media.split('&token=')
+
+      // const displayMedia = first.indexOf('.png') > -1 ? first : first
+      //   .replace('Functional%20Reading', 'Functional%20Reading(png)')
+      //   .replace('Daily%20Math', 'Daily%20Math(png)')
+      //   .replace('.pdf', '.png')
+      // console.log("update -> displayMedia", displayMedia)
+
+     // await questionsRef.doc(doc.id).update({ displayMedia, mediaPng: '' })
 
       // const justname = decodeURIComponent(name).replace('/', ' ').replace('.pdf', '.png')
       // //   console.log("update -> justname", justname)
@@ -107,8 +119,9 @@ const update = async () => {
       //   });
 
       // uploadFile({media})
-    }
+    } 
 
+     
   })
 
   //  const mod =result.docs[0];
@@ -165,23 +178,39 @@ const uploadFile = async (props) => {
 
   const pdfImage = new PDFImage(tempFilePath);
   const imagePath = await pdfImage.convertPage(0);
+  console.log("uploadFile -> imagePath", imagePath)
 
 
   //fs.renameSync(imagePath,)
   //const downloadImageResponse = await getDocPreview(getpdfdatapac)
 
   //const { imagePath } = downloadImageResponse
-  gm(imagePath) 
-  
-  // Invoke trim function  
-  .trim() 
-    
-  // Process and Write the image 
-  .write(imagePath.replace('-0',''), function (err) { 
-      if (!err) console.log('done'); 
-  });
+
+
+
+
+
+
+  // gm(imagePath)
+
+  //   // Invoke trim function  
+  //   .trim()
+
+  //   // Process and Write the image 
+
+  //   .write(imagePath.replace('-0', '').replace('imageConversions', 'imageConversions/trimed'), function (err) {
+  //     if (!err) {
+  //       console.log('err', err);
+  //       return;
+  //     }
+
+  //   });
+
+
+
+
   const [extn] = name.split('.').reverse()
-  console.log("TCL: uploadFile -> name", name)
+  console.log("TCL: uploadFile -> n∂ame", name)
   console.log("TCL: uploadFile -> extn", extn)
 
   try {
@@ -191,7 +220,7 @@ const uploadFile = async (props) => {
   }
   finally {
     await unlinkAsync(tempFilePath)
-      await unlinkAsync(imagePath)
+    //  await unlinkAsync(imagePath)
   }
 };
 
