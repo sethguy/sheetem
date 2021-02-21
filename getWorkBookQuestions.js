@@ -45,7 +45,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
 
                         v = `${v}`
                     }
-                    buildQuestionData({ v, colName, sheetName, row, questions, colIndex, bookName,sheet });
+                    buildQuestionData({ v, colName, sheetName, cell, row, questions, colIndex, bookName,sheet });
                     colIndex++;
                     colName = String.fromCharCode(65 + colIndex);
                 }
@@ -60,7 +60,7 @@ const getWorkBookQuestions = async (workbook, bookName) => {
             };
         });
 
-    require('fs').writeFileSync('./psr2.js', `
+    require('fs').writeFileSync('./fm.js', `
     
     const set = ${JSON.stringify(SheetQuestions,null,2)};
     

@@ -3,7 +3,7 @@ const firebase = require('./firebase');
 const db = firebase.firestore();
 
 //Object Naming
-const {loadModDescriptions}  = require("./loadModDescriptions");
+const { loadModDescriptions } = require("./loadModDescriptions");
 
 const tagsRef = db.collection('questionTags');
 const questionsRef = db.collection('sheetQuestions');
@@ -13,11 +13,11 @@ const fs = require('fs');
 if (typeof require !== 'undefined') XLSX = require('xlsx');
 
 const loadWorkBookQuestion = () => {
-    const books = fs.readdirSync('./books')
-    books.forEach((bookName) => {
-        var workbook = XLSX.readFile(`./books/${bookName}`);
-        getWorkBookQuestions(workbook, bookName.replace('.xlsx', ''))
-    })
+  const books = fs.readdirSync('./books')
+  books.forEach((bookName) => {
+    var workbook = XLSX.readFile(`./books/${bookName}`);
+    getWorkBookQuestions(workbook, bookName.replace('.xlsx', ''))
+  })
 }
 
 // const countWorkBookQuestions = async () => {
@@ -28,9 +28,9 @@ const loadWorkBookQuestion = () => {
 //     console.log(docs.length)
 // }
 
- const loadQuestionSheet = () => {
-  var workbook = XLSX.readFile(`./books/PSR2.xlsx`);
-  getWorkBookQuestions(workbook,'Cognition');
+const loadQuestionSheet = () => {
+  var workbook = XLSX.readFile(`./books/20-03-31Functional Math REV.xlsx`);
+  getWorkBookQuestions(workbook, 'Cognition');
 }
 loadQuestionSheet()
 // const updatequestionSet = async () => {
@@ -90,7 +90,7 @@ loadQuestionSheet()
 
 
 /**
- 
+
 
 var storage = firebase.storage();
 

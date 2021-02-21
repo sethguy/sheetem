@@ -1,5 +1,6 @@
 const setDefaultQuestion = (props) => {
-    const { colName, v, row, sheetName, questions, colIndex } = props;
+    const { colName, v, row, sheetName, questions, colIndex, cell } = props;
+    console.log("setDefaultQuestion -> cell", cell)
     if (colName == 'A') {
         const question = { moduleName: sheetName, wrongAnswerText: [] }
         question.challange = v;
@@ -213,7 +214,7 @@ const basicPlus = (props) => {
 }
 
 
-const sequencing  = (props) => {
+const sequencing = (props) => {
     const { colName, v, row, sheetName, questions, colIndex } = props;
     if (colIndex == 0) {
         const question = { moduleName: sheetName, sequence: [] };
@@ -267,8 +268,10 @@ const buildParagraphRecallQuestions = (props) => {
 
 
 const buildParagraphQuestions = (props) => {
-    const { colName, row, sheetName, questions, colIndex, sheet } = props;
+    const { colName, row, cell, sheetName, questions, colIndex, sheet } = props;
+    console.log("buildParagraphQuestions -> cell", cell)
 
+    const { w } = cell;
     let v = props.v
 
     if (typeof v == 'number') {
@@ -277,7 +280,7 @@ const buildParagraphQuestions = (props) => {
 
     if (colIndex == 0 && v && v.length) {
         const question = { questionSet: [], moduleName: sheetName }
-        question.statement = v;
+        question.statement = w;
         questions.push(question);
 
     } else if (v && v.length) {
@@ -286,15 +289,15 @@ const buildParagraphQuestions = (props) => {
 
         const { questionSet } = question;
         if (colIndex == 1) {
-            questionSet.push({ challange: v, wrongAnswerText: [] })
+            questionSet.push({ challange: w, wrongAnswerText: [] })
         }
         if (colIndex == 2) {
             const currentChallange = questionSet[questionSet.length - 1]
-            currentChallange.answerText = v
+            currentChallange.answerText = w
         }
         if (colIndex > 2) {
             const currentChallange = questionSet[questionSet.length - 1]
-            currentChallange.wrongAnswerText.push(v)
+            currentChallange.wrongAnswerText.push(w)
         }
     }
 }
@@ -347,8 +350,155 @@ const genName = (props) => {
 };
 
 
+const change = (props) => {
+    const { colName, cell, row, sheetName, questions, colIndex } = props;
+
+    const { w } = cell
+
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.challangePicture = w;
+        questions.push(question);
+    }
+
+    if (colIndex == 1) {
+        const question = questions[row - 1];
+        question.challangeText = w;
+    }
+
+    if (colIndex == 2) {
+        const question = questions[row - 1];
+        question.challangeText = w;
+    }
+};
+
+
+const billCoin = (props) => {
+    const { colName, cell, row, sheetName, questions, colIndex } = props;
+
+    const { w } = cell
+
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.challangePicture = w;
+        questions.push(question);
+    }
+
+    if (colIndex == 1) {
+        const question = questions[row - 1];
+        question.challangeText = w;
+    }
+
+    if (colIndex == 2) {
+        const question = questions[row - 1]
+        question.answerText = w;
+    }
+
+    if (colIndex > 2) {
+        const question = questions[row - 1];
+        question.wrongAnswerText.push(w)
+    }
+};
+
+
+const budge = (props) => {
+    const { colName, cell, row, sheetName, questions, colIndex } = props;
+
+    const { w } = cell
+
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.challangePicture = w;
+        questions.push(question);
+    }
+
+    if (colIndex == 1) {
+        const question = questions[row - 1];
+        question.challangeText = w;
+    }
+
+    if (colIndex == 2) {
+        const question = questions[row - 1]
+        question.billImage = w;
+    }
+
+    if (colIndex == 3) {
+        const question = questions[row - 1];
+        question.billAmount = w
+    }
+    if (colIndex == 4) {
+        const question = questions[row - 1];
+        question.answer = w
+    }
+
+    if (colIndex == 5) {
+        const question = questions[row - 1];
+        question.title = w
+    }
+};
+
+const dailyMathLine = (props) => {
+    const { colName, cell, row, sheetName, questions, colIndex } = props;
+
+    const { w } = cell
+
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.challangePicture = w;
+        questions.push(question);
+    }
+
+    if (colIndex == 1) {
+        const question = questions[row - 1];
+        question.challangeText = w;
+    }
+    if (colIndex == 2) {
+        const question = questions[row - 1]
+        question.challangeTime = w;
+    }
+
+    if (colIndex == 3) {
+        const question = questions[row - 1]
+        question.answerText = w;
+    }
+
+    if (colIndex > 3) {
+        const question = questions[row - 1];
+        question.wrongAnswerText.push(w)
+    }
+};
+
+
+const funcWord = (props) => {
+    const { colName, cell, row, sheetName, questions, colIndex } = props;
+
+    const { w } = cell
+
+    if (colIndex == 0) {
+        const question = { moduleName: sheetName, wrongAnswerText: [] };
+        question.challangeText = w;
+        questions.push(question);
+    }
+
+    if (colIndex == 1) {
+        const question = questions[row - 1]
+        question.answerText = w;
+    }
+
+    if (colIndex > 1) {
+        const question = questions[row - 1];
+        question.wrongAnswerText.push(w)
+    }
+};
+
+
 
 module.exports = {
+    funcWord,
+    dailyMathLine,
+    budge,
+    billCoin,
+    change,
     sequencing,
     basicPlus,
     semFea,
