@@ -353,7 +353,7 @@ const genName = (props) => {
 const change = (props) => {
     const { colName, cell, row, sheetName, questions, colIndex } = props;
 
-    const { w } = cell
+    const w = (cell.w||'').trim()
 
     if (colIndex == 0) {
         const question = { moduleName: sheetName, wrongAnswerText: [] };
@@ -368,7 +368,7 @@ const change = (props) => {
 
     if (colIndex == 2) {
         const question = questions[row - 1];
-        question.challangeText = w;
+        question.answerText = w;
     }
 };
 
@@ -376,7 +376,7 @@ const change = (props) => {
 const billCoin = (props) => {
     const { colName, cell, row, sheetName, questions, colIndex } = props;
 
-    const { w } = cell
+    const w = (cell.w||'').trim()
 
     if (colIndex == 0) {
         const question = { moduleName: sheetName, wrongAnswerText: [] };
@@ -404,7 +404,7 @@ const billCoin = (props) => {
 const budge = (props) => {
     const { colName, cell, row, sheetName, questions, colIndex } = props;
 
-    const { w } = cell
+    const w = (cell.w||'').trim()
 
     if (colIndex == 0) {
         const question = { moduleName: sheetName, wrongAnswerText: [] };
@@ -442,7 +442,9 @@ const dailyMath = (props) => {
     const { colName, row, cell, sheetName, questions, colIndex, sheet } = props;
     console.log("dailyMath -> cell", cell)
 
-    const { w } = cell;
+  //  const { w } = cell;
+
+    const w = (cell.w||'').trim()
     let v = props.v
 
     if (typeof v == 'number') {
@@ -466,9 +468,9 @@ const dailyMath = (props) => {
             const currentChallange = questionSet[questionSet.length - 1]
             currentChallange.challangeText = w
         }
-        if (colIndex = 3) {
+        if (colIndex == 3) {
             const currentChallange = questionSet[questionSet.length - 1]
-            currentChallange.answerText.push(w)
+            currentChallange.answerText =w
         }
 
         if (colIndex > 3) {
@@ -478,10 +480,11 @@ const dailyMath = (props) => {
     }
 }
 
+
 const dailyMathLine = (props) => {
     const { colName, cell, row, sheetName, questions, colIndex } = props;
 
-    const { w } = cell
+    const w = (cell.w||'').trim()
 
     if (colIndex == 0) {
         const question = { moduleName: sheetName, wrongAnswerText: [] };
@@ -513,7 +516,7 @@ const dailyMathLine = (props) => {
 const funcWord = (props) => {
     const { colName, cell, row, sheetName, questions, colIndex } = props;
 
-    const { w } = cell
+    const w = (cell.w||'').trim()
 
     if (colIndex == 0) {
         const question = { moduleName: sheetName, wrongAnswerText: [] };
