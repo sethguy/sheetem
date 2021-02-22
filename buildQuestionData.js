@@ -1,5 +1,10 @@
 const {
-
+    dailyMath,
+    funcWord,
+    dailyMathLine,
+    budge,
+    billCoin,
+    change,
     sequencing,
     basicPlus,
     semFea,
@@ -19,6 +24,38 @@ const {
 
 const buildQuestionData = (props) => {
     const { colName, v, row, sheetName, questions, colIndex, sheet, cell } = props;
+
+
+    if (sheetName.indexOf('Correct change') > -1) {
+        const question = change({ colName, v, row, sheetName, questions, cell, colIndex });
+        return question;
+    }
+    if (sheetName.indexOf('Bill Coin Total') > -1) {
+        const question = billCoin({ colName, v, row, sheetName, questions, cell, colIndex });
+        return question;
+    }
+    if (sheetName.indexOf('Budgeting') > -1) {
+        const question = budge({ colName, v, row, sheetName, questions, cell, colIndex });
+        return question;
+    }
+    if (sheetName === 'Daily Math') {
+        const question = dailyMath({ colName, v, row, sheetName, questions, cell, colIndex });
+        return question;
+    }
+
+    if (sheetName.indexOf('Daily Math line') > -1) {
+        const question = dailyMathLine({ colName, v, row, sheetName, questions, cell, colIndex });
+        return question;
+    }
+    if (sheetName.indexOf('Functional Word Problems') > -1) {
+        const question = funcWord({ colName, v, row, sheetName, questions, cell, colIndex });
+        return question;
+    }
+
+
+
+
+
 
     if (sheetName.indexOf('Sequencing') > -1) {
         const question = sequencing({ colName, v, row, sheetName, questions, cell, colIndex });

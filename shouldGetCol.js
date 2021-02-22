@@ -9,7 +9,8 @@ const shouldGetCol = (props) => {
         sheetName.indexOf('Picture Recall') > -1 ||
         sheetName.indexOf('Voicemail Recall') > -1 ||
         sheetName.indexOf('Paragraph Recall') > -1 ||
-        sheetName.indexOf('Functional Reading') > -1
+        sheetName.indexOf('Functional Reading') > -1 ||
+        sheetName === 'Daily Math'
     ) {
         const goodCol = paragraphColCheck({ sheet, sheetName, colIndex, colName, row });
         return goodCol;

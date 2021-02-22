@@ -5,7 +5,8 @@ const shouldGetRow = ({ sheetName, sheet, row }) => {
         sheetName.indexOf('Picture Recall') > -1 ||
         sheetName.indexOf('Voicemail Recall') > -1 ||
         sheetName.indexOf('Paragraph Recall') > -1 ||
-        sheetName.indexOf('Functional Reading') > -1
+        sheetName.indexOf('Functional Reading') > -1 ||
+        sheetName === 'Daily Math'
     ) {
         const goodRow = paragraphRowCheck({ sheet, sheetName, row });
         return goodRow;

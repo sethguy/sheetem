@@ -437,6 +437,47 @@ const budge = (props) => {
     }
 };
 
+
+const dailyMath = (props) => {
+    const { colName, row, cell, sheetName, questions, colIndex, sheet } = props;
+    console.log("dailyMath -> cell", cell)
+
+    const { w } = cell;
+    let v = props.v
+
+    if (typeof v == 'number') {
+        v = `${v}`
+    }
+
+    if (colIndex == 0 && v && v.length) {
+        const question = { questionSet: [], moduleName: sheetName }
+        question.title = w;
+        questions.push(question);
+
+    } else if (v && v.length) {
+
+        const question = questions[questions.length - 1]
+
+        const { questionSet } = question;
+        if (colIndex == 1) {
+            questionSet.push({ challangePicture: w, wrongAnswerText: [] })
+        }
+        if (colIndex == 2) {
+            const currentChallange = questionSet[questionSet.length - 1]
+            currentChallange.challangeText = w
+        }
+        if (colIndex = 3) {
+            const currentChallange = questionSet[questionSet.length - 1]
+            currentChallange.answerText.push(w)
+        }
+
+        if (colIndex > 3) {
+            const currentChallange = questionSet[questionSet.length - 1]
+            currentChallange.wrongAnswerText.push(w)
+        }
+    }
+}
+
 const dailyMathLine = (props) => {
     const { colName, cell, row, sheetName, questions, colIndex } = props;
 
@@ -493,7 +534,11 @@ const funcWord = (props) => {
 
 
 
+
+
+
 module.exports = {
+    dailyMath,
     funcWord,
     dailyMathLine,
     budge,
