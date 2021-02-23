@@ -124,7 +124,6 @@ const update = async () => {
 
         const cp = one ? one.challangePicture : challangePicture
 
-        console.log("update -> challangePicture")
 
         images.challangePicture = cp;
 
@@ -139,13 +138,21 @@ const update = async () => {
           count++
           const trimmed = await convertAndTrim(billImage)
 
+          if(!trimmed){
+            console.log(" bad trim -> billImage", billImage)
+
+          }
+
           //  newData.billImage = trimmed
         }
         if (challangePicture) {
           count++
           newData.oldchallangePicture = challangePicture
           const trimmed = await convertAndTrim(challangePicture)
+          if(!trimmed){
+            console.log(" bad trim -> challangePicture", challangePicture)
 
+          }
           //   newData.challangePicture = trimmed
         }
 
@@ -212,8 +219,8 @@ const tryTrim = async (imagePath) => {
     const trimed = await trimImage(imagePath, toPath)
     return trimed
   } catch (error) {
-    console.log("tryTrim -> error", error)
-    return toPath
+   // console.log("tryTrim -> error", error)
+    return undefined
 
   }
 
@@ -229,7 +236,7 @@ const convertAndTrim = async (url) => {
 
   if (ext == 'pdf') {
     const { tempFilePath } = await downloadPdf({ href: url, name })
-    console.log("convertAndTrim -> tempFilePath", tempFilePath)
+    // console.log("convertAndTrim -> tempFilePath", tempFilePath)
 
     const pdfImage = new PDFImage(tempFilePath);
     const imagePath = await pdfImage.convertPage(0);
@@ -239,14 +246,16 @@ const convertAndTrim = async (url) => {
 
     await unlinkAsync(tempFilePath);
     await unlinkAsync(imagePath)
-
+    return trimmed
   } else {
-    // const { tempFilePath } = await downloadPdf({ href: url, name })
-    // console.log("convertAndTrim -> tempFilePath", tempFilePath)
+    const { tempFilePath } = await downloadPdf({ href: url, name })
+   // console.log("convertAndTrim -> tempFilePath", tempFilePath)
 
-    // const trimmed = await tryTrim(tempFilePath)
+    const trimmed = await tryTrim(tempFilePath)
 
-    // await unlinkAsync(tempFilePath);
+    await unlinkAsync(tempFilePath);
+
+    return trimmed
   }
 
 
