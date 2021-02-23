@@ -1,5 +1,6 @@
 const firebase = require('../firebase');
 
+const wait = (time) => new Promise((resolve) => { setTimeout(() => resolve(), time) })
 
 var admin = require("firebase-admin");
 
@@ -64,12 +65,14 @@ const getPath = (url) => {
   const [parts] = url.split('?')
 
 
-
-  const path = decodeURIComponent(parts.replace('https://firebasestorage.googleapis.com/v0/b/epicc-admin.appspot.com/o', ''))
-  console.log("getPath -> path", path)
+  //const path = decodeURIComponent(parts.replace('https://firebasestorage.googleapis.com/v0/b/epicc-admin.appspot.com/o', ''))
+ 
+ 
+  const path = parts.replace('https://firebasestorage.googleapis.com/v0/b/epicc-admin.appspot.com/o', '')
 
 
   const [name] = path.split('/').reverse()
+  //console.log("getPath -> path", name, url)
 
 
   const [n, ext] = name.split('.')
@@ -99,6 +102,9 @@ const update = async () => {
   //     expires: '03-09-2491'
   //   });  //  console.log("update -> result", result.docs.length)
 
+
+  const questions = []
+
   let count = 0
   const mods = [
     'Correct change',
@@ -114,53 +120,12 @@ const update = async () => {
       const result = await questionsRef.where('moduleName', '==', moduleName).get()
 
       result.docs.map(async (question) => {
-        const images = {}
 
-        const data = question.data()
-
-        const { challangePicture, billImage, questionSet = [], moduleName } = data;
-
-        const [one] = questionSet;
-
-        const cp = one ? one.challangePicture : challangePicture
+        await updateQUestionImaget(question)
 
 
-        images.challangePicture = cp;
+      //  questions.push(question)
 
-        images.billImage = billImage;
-
-        const newData = {
-          ...data,
-        }
-
-        if (billImage) {
-          newData.oldbillImage = billImage
-          count++
-          const trimmed = await convertAndTrim(billImage)
-
-
-          // const result = await testAsync(trimmed)
-
-          // if (!result) {
-          //   console.log(" bad trim -> billImage", billImage)
-
-          // }
-
-          //  newData.billImage = trimmed
-        }
-        if (challangePicture) {
-          count++
-          newData.oldchallangePicture = challangePicture
-          const trimmed = await convertAndTrim(challangePicture)
-
-          // const result = await testAsync(trimmed)
-
-          // if (!result) {
-          //   console.log(" bad trim -> challangePicture", challangePicture)
-
-          // }
-          //   newData.challangePicture = trimmed
-        }
 
       })
 
@@ -171,6 +136,33 @@ const update = async () => {
   await Promise.all(mods)
   console.log("update -> result", count)
 
+  // i = 0
+
+  // while (i < questions.length) {
+
+
+  //   const question = questions[i]
+
+
+  //   try {
+
+  //    // await wait(800)
+  //     await updateQUestionImaget(question)
+
+  //   } catch (error) {
+  //     console.log("update -> error", error)
+
+  //   } finally {
+  //     console.log("update i", i,questions.length)
+
+  //     i++
+  //   }
+
+
+
+
+
+  // }
 
   // SheetQuestions.forEach(({ sheetName, questions }) => {
   //   console.log("update -> moduleName", moduleName)
@@ -191,6 +183,62 @@ const update = async () => {
 }
 update()
 
+
+
+const updateQUestionImaget = async (question) => {
+
+
+  const images = {}
+
+  const data = question.data()
+
+  const { challangePicture, billImage, questionSet = [], moduleName } = data;
+
+  const [one] = questionSet;
+
+  const cp = one ? one.challangePicture : challangePicture
+
+
+  images.challangePicture = cp;
+
+  images.billImage = billImage;
+
+  const newData = {
+    ...data,
+  }
+
+  if (billImage) {
+    newData.oldbillImage = billImage
+    const trimmed = await convertAndTrim(billImage)
+
+
+    const result = await testAsync(trimmed)
+
+
+
+    if (!result) {
+      console.log(" bad trim -> billImage", billImage)
+    }
+
+    //  newData.billImage = trimmed
+  }
+  if (challangePicture) {
+
+    newData.oldchallangePicture = challangePicture
+    const trimmed = await convertAndTrim(challangePicture)
+
+    const result = await testAsync(trimmed)
+
+    if (!result) {
+      console.log(" bad trim -> challangePicture", challangePicture)
+
+    }
+    //   newData.challangePicture = trimmed
+  }
+
+}
+
+
 const trimImage = (imagePath, toPath) => {
 
   return new Promise((resolve, reject) => {
@@ -206,7 +254,7 @@ const trimImage = (imagePath, toPath) => {
 
       .write(toPath, function (err) {
         if (!err) {
-          console.log('err', err);
+          //console.log('err', err);
 
 
           return reject(err)
@@ -260,6 +308,7 @@ const testAsync = (path) => {
 
 
 
+
 const convertAndTrim = async (url) => {
 
   const info = getPath(url)
@@ -268,12 +317,24 @@ const convertAndTrim = async (url) => {
   const { path, name, ext, n } = info;
 
   const result = await downloadPdf({ href: url, name })
+  //await wait(500)
+
+
+  //const { tempFilePath } = result
+
+  // return tempFilePath
 
   if (!result) {
     return
   } else {
 
     const { tempFilePath } = result
+
+
+
+    const isThere = await testAsync(tempFilePath)
+   // console.log("convertAndTrim -> isThere", isThere, tempFilePath)
+
 
     if (ext == 'pdf') {
       // console.log("convertAndTrim -> tempFilePath", tempFilePath)
@@ -282,28 +343,30 @@ const convertAndTrim = async (url) => {
       try {
         const pdfImage = new PDFImage(tempFilePath);
         const imagePath = await pdfImage.convertPage(0);
-        // await unlinkAsync(imagePath)
+       // await unlinkAsync(imagePath)
+        const trimmed = await tryTrim(imagePath)
 
+        return trimmed
       } catch (error) {
-        console.log("convertAndTrim  PDFImage -> error", error)
+        console.log("convertAndTrim  PDFImage -> error", url, error)
 
       } finally {
 
-        await unlinkAsync(tempFilePath);
+
+
+     //   await unlinkAsync(tempFilePath);
 
       }
 
-      // const trimmed = await tryTrim(imagePath)
 
-      //return trimmed
     } else {
-      // // console.log("convertAndTrim -> tempFilePath", tempFilePath)
+      // console.log("convertAndTrim -> tempFilePath", tempFilePath)
 
-      // const trimmed = await tryTrim(tempFilePath)
+      const trimmed = await tryTrim(tempFilePath)
 
-      await unlinkAsync(tempFilePath);
+     // await unlinkAsync(tempFilePath);
 
-      // return trimmed
+      return trimmed
     }
 
   }
@@ -362,3 +425,32 @@ const writeFileAsync = async (path, data) => {
     });
   });
 };
+
+
+
+// const go = async () =>{
+
+//   const result = await downloadPdf({
+//     name: 'poop.pdf',
+//     href: 'https://firebasestorage.googleapis.com/v0/b/epicc-admin.appspot.com/o/bills%20and%20coins(money)%2F%2410%20Bill.pdf?alt=media&token=78d65037-c779-4371-be73-84de9b570046'
+//   })
+
+//   try {
+//     const pdfImage = new PDFImage('./poop.pdf');
+//     const imagePath = await pdfImage.convertPage(0);
+//   } catch (error) {
+//     console.log("error", error)
+
+//   }
+
+
+
+// }
+// (async () => {
+
+//  await go()
+
+
+// })()
+
+
