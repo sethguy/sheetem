@@ -267,51 +267,45 @@ const convertAndTrim = async (url) => {
 
   const { path, name, ext, n } = info;
 
-
   const result = await downloadPdf({ href: url, name })
 
-
-
   if (!result) {
-
-
     return
-  }
-  const { tempFilePath } = result
+  } else {
 
-  if (ext == 'pdf') {
-    // console.log("convertAndTrim -> tempFilePath", tempFilePath)
+    const { tempFilePath } = result
+
+    if (ext == 'pdf') {
+      // console.log("convertAndTrim -> tempFilePath", tempFilePath)
 
 
-    try {
-      const pdfImage = new PDFImage(tempFilePath);
-      const imagePath = await pdfImage.convertPage(0);
-      // await unlinkAsync(imagePath)
+      try {
+        const pdfImage = new PDFImage(tempFilePath);
+        const imagePath = await pdfImage.convertPage(0);
+        // await unlinkAsync(imagePath)
 
-    } catch (error) {
-    console.log("convertAndTrim  PDFImage -> error", error)
+      } catch (error) {
+        console.log("convertAndTrim  PDFImage -> error", error)
 
-    } finally {
+      } finally {
+
+        await unlinkAsync(tempFilePath);
+
+      }
+
+      // const trimmed = await tryTrim(imagePath)
+
+      //return trimmed
+    } else {
+      // // console.log("convertAndTrim -> tempFilePath", tempFilePath)
+
+      // const trimmed = await tryTrim(tempFilePath)
 
       await unlinkAsync(tempFilePath);
 
-
+      // return trimmed
     }
 
-
-
-
-    // const trimmed = await tryTrim(imagePath)
-
-    //return trimmed
-  } else {
-    // // console.log("convertAndTrim -> tempFilePath", tempFilePath)
-
-    // const trimmed = await tryTrim(tempFilePath)
-
-    await unlinkAsync(tempFilePath);
-
-    // return trimmed
   }
 
 
