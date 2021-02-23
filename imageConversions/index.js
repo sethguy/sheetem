@@ -137,14 +137,14 @@ const update = async () => {
         if (billImage) {
           newData.oldbillImage = billImage
           count++
-          //  const trimmed = await convertAndTrim(billImage)
+          const trimmed = await convertAndTrim(billImage)
 
           //  newData.billImage = trimmed
         }
         if (challangePicture) {
           count++
           newData.oldchallangePicture = challangePicture
-          //  const trimmed = await convertAndTrim(challangePicture)
+          const trimmed = await convertAndTrim(challangePicture)
 
           //   newData.challangePicture = trimmed
         }
@@ -209,7 +209,7 @@ const trimImage = (imagePath, toPath) => {
 const tryTrim = async (imagePath) => {
   const toPath = imagePath.replace('-0', '').replace('imageConversions', 'imageConversions/trimed');
   try {
-    const trimed = await trimImage(imagePath)
+    const trimed = await trimImage(imagePath, toPath)
     return trimed
   } catch (error) {
     console.log("tryTrim -> error", error)
@@ -241,12 +241,12 @@ const convertAndTrim = async (url) => {
     await unlinkAsync(imagePath)
 
   } else {
-    const { tempFilePath } = await downloadPdf({ href: url, name })
-    console.log("convertAndTrim -> tempFilePath", tempFilePath)
+    // const { tempFilePath } = await downloadPdf({ href: url, name })
+    // console.log("convertAndTrim -> tempFilePath", tempFilePath)
 
-    const trimmed = await tryTrim(imagePath)
+    // const trimmed = await tryTrim(tempFilePath)
 
-    await unlinkAsync(tempFilePath);
+    // await unlinkAsync(tempFilePath);
   }
 
 
