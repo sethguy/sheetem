@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "firebase": "^6.2.4",
+    "firebase-admin": "^9.5.0",
     "gm": "^1.23.1",
     "pdf-image": "^2.0.0",
     "pdf-to-png": "^1.0.3",

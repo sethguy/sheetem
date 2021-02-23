@@ -1,5 +1,17 @@
 const firebase = require('../firebase');
-const db = firebase.firestore();
+
+
+var admin = require("firebase-admin");
+
+var serviceAccount = require("../epicc-admin-firebase-adminsdk-o0h1d-54e583caeb.json");
+const shoppdfbucket = "epicc-admin.appspot.com";
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: shoppdfbucket
+});
+
+const db = admin.firestore();
 const questionsRef = db.collection('sheetQuestions');
 const areasRef = db.collection('sheetAreas');
 const modsRef = db.collection('sheetMods');
@@ -9,10 +21,13 @@ var os = require('os')
 var axios = require('axios')
 var fs = require('fs')
 
+const SheetQuestions = require('../fm')
+
 var gm = require('gm');
 
+var bucket = admin.storage().bucket();
+
 //const imagemagick = require('imagemagick-native')
-// const shoppdfbucket = "epicc-admin.appspot.com";
 //const storageRef = firebase.storage()
 
 const password = process.env.EDIT_PASSWORD
@@ -43,213 +58,202 @@ const files = () => {
   });
 }
 
+
+const getPath = (url) => {
+
+  const [parts] = url.split('?')
+
+
+
+  const path = decodeURIComponent(parts.replace('https://firebasestorage.googleapis.com/v0/b/epicc-admin.appspot.com/o', ''))
+  console.log("getPath -> path", path)
+
+
+  const [name] = path.split('/').reverse()
+
+
+  const [n, ext] = name.split('.')
+
+  return { path, name, ext, n };
+}
+
 const update = async () => {
 
-  await signIn()
+  //await signIn()
 
-  const result = await questionsRef.where('moduleName', '==', 'Functional Reading').get()
-  //  console.log("update -> result", result.docs.length)
+  // const there = fs.existsSync(pngname)
+  // console.log("update -> there", there)
+  // const bucket = storageRef.bucket(shoppdfbucket);
+  // let imageDest = `/funtionalPngs/${pngname}`;
+  // await bucket.upload(imagePath, {
+  //   destination: imageDest,
+  //   metadata: {
+  //     // firebaseStorageDownloadTokens: uuid
+  //     metadata,
+  //   },
+  // });
+  // const [imageUrl] = await bucket
+  //   .file(imageDest)
+  //   .getSignedUrl({
+  //     action: 'read',
+  //     expires: '03-09-2491'
+  //   });  //  console.log("update -> result", result.docs.length)
 
-  result.docs.forEach(async (doc) => {
-    //console.log("update -> doc", doc)
+  let count = 0
+  const mods = [
+    'Correct change',
+    'Bill Coin Total',
+    'Budgeting 1',
+    'Budgeting 2',
+    'Daily Math',
+  ]
+    .map(async (sheetName) => {
 
-    const { questionSet = [] } = doc.data();
-    // console.log("update -> doc", doc.data())
+      const moduleName = sheetName.replace('line', '').trim()
 
-    const [one] = questionSet
+      const result = await questionsRef.where('moduleName', '==', moduleName).get()
 
-    const { media = '' } = one;
-    console.log("update -> media", media)
+      result.docs.map(async (question) => {
+        const images = {}
 
-    const splits = media.split('%2F')
+        const data = question.data()
 
-    const paths = media.split('/')
+        const { challangePicture, billImage, questionSet = [], moduleName } = data;
 
-    const [last] = paths.reverse()
+        const [one] = questionSet;
 
-    const querys = last.split('?')
+        const cp = one ? one.challangePicture : challangePicture
 
-    const [pathway] = querys;
+        console.log("update -> challangePicture")
 
+        images.challangePicture = cp;
 
-    const [name] = pathway.split('%2F').reverse()
+        images.billImage = billImage;
 
+        const newData = {
+          ...data,
+        }
 
-    const formated = name.split('%20').join(' ')
-    if (formated.indexOf('.pdf') > -1) {
+        if (billImage) {
+          newData.oldbillImage = billImage
+          count++
+          //  const trimmed = await convertAndTrim(billImage)
 
-      // console.log("update -> media", media)
-      // console.log("update -> media---9", media.replace('com/o/Functional','com/o/pdfpngx%2FFunctional').replace('Reading%2F','Reading%20').replace('.pdf','.png'))
-      // uploadFile({ media, formated })
-      console.log("update -> media", formated, name)
+          //  newData.billImage = trimmed
+        }
+        if (challangePicture) {
+          count++
+          newData.oldchallangePicture = challangePicture
+          //  const trimmed = await convertAndTrim(challangePicture)
 
+          //   newData.challangePicture = trimmed
+        }
 
-      const [first] = media.split('&token=')
-
-      // const displayMedia = first.indexOf('.png') > -1 ? first : first
-      //   .replace('Functional%20Reading', 'Functional%20Reading(png)')
-      //   .replace('Daily%20Math', 'Daily%20Math(png)')
-      //   .replace('.pdf', '.png')
-      // console.log("update -> displayMedia", displayMedia)
-
-     // await questionsRef.doc(doc.id).update({ displayMedia, mediaPng: '' })
-
-      // const justname = decodeURIComponent(name).replace('/', ' ').replace('.pdf', '.png')
-      // //   console.log("update -> justname", justname)
-
-      // const pngname = `${__dirname}/pngs/${justname}`
-      //   console.log("update -> pngname", pngname)
-
-      // const there = fs.existsSync(pngname)
-      // console.log("update -> there", there)
-      // const bucket = storageRef.bucket(shoppdfbucket);
-      // let imageDest = `/funtionalPngs/${pngname}`;
-      // await bucket.upload(imagePath, {
-      //   destination: imageDest,
-      //   metadata: {
-      //     // firebaseStorageDownloadTokens: uuid
-      //     metadata,
-      //   },
-      // });
-      // const [imageUrl] = await bucket
-      //   .file(imageDest)
-      //   .getSignedUrl({
-      //     action: 'read',
-      //     expires: '03-09-2491'
-      //   });
-
-      // uploadFile({media})
-    } 
-
-     
-  })
-
-  //  const mod =result.docs[0];
-
-  // modsRef.doc(area.docs[0].id).update({ levelsConfig })
-  //  areasRef.doc(area.docs[0].id).update({modshape: area.docs[0].data().modShape})
-  //  const badguys1 = await questionsRef.where('moduleName','==','Face & Name Recall').get()
-  // const badguys2 = await questionsRef.where('moduleName','==','Voicemail Recall').get()
-
-  //const allbadd = [...badguys1.docs];
-
-  // console.log("uploadNewQuestions -> allbadd", allbadd.length)
-
-  // allbadd.map(async(item)=>{
-  //   console.log("uploadNewQuestions -> item", item)
-
-  // //  await questionsRef.doc(item.id)
+      })
 
 
-  // //  .update({
-  // //  })
+    })
 
-  //  console.log("uploadNewQuestions -> done", item)
 
-  // })
-  // // SheetQuestions.forEach(({ sheetName, questions }) => {
-  // //   // console.log("TCL: sheetName", sheetName)
-  // //   questions.forEach(async (questionData) => {
-  // //     console.log("uploadNewQuestions -> questionData", questionData)
-  // //     // console.log("questionData", questionData)
-  // //     // console.log("TCL: questionData", questionData)
-  // //   // await questionsRef.doc().set({ ...questionData, areaOfConcentraion: 'Cognition', moduleName: sheetName })
+  await Promise.all(mods)
+  console.log("update -> result", count)
 
-  // //     console.log("TCL: qcount", questionData);
-  // //   });
-  // // });
+
+  // SheetQuestions.forEach(({ sheetName, questions }) => {
+  //   console.log("update -> moduleName", moduleName)
+
+  //   // console.log("TCL: sheetName", sheetName)
+  //   questions.forEach(async (questionData) => {
+  //     //  console.log("uploadNewQuestions -> questionData", questionData)
+  //     // console.log("questionData", questionData)
+  //     // console.log("TCL: questionData", questionData)
+
+  //     //    console.log("update -> moduleName", moduleName)
+
+  //     //  await questionsRef.doc().set({ ...questionData, areaOfConcentraion: 'Cognition', moduleName })
+
+  //     //console.log("TCL: qcount", questionData);
+  //   });
+  // });
 }
 update()
-const uploadFile = async (props) => {
-  const { media, formated } = props;
-  const getpdfdatapac = {
-    formated,
-    metadata: {
-      href: media
-    },
-  };
 
-  const downloadResponse = await downloadPdf(getpdfdatapac);
-  console.log("TCL: uploadFile ->  downloadResponse", downloadResponse)
-  if (!downloadResponse) {
-    return;
-  }
-  const { tempFilePath, name } = downloadResponse
-
-  const pdfImage = new PDFImage(tempFilePath);
-  const imagePath = await pdfImage.convertPage(0);
-  console.log("uploadFile -> imagePath", imagePath)
-
-
-  //fs.renameSync(imagePath,)
-  //const downloadImageResponse = await getDocPreview(getpdfdatapac)
-
-  //const { imagePath } = downloadImageResponse
-
-
-
-
-
-
-  // gm(imagePath)
-
-  //   // Invoke trim function  
-  //   .trim()
-
-  //   // Process and Write the image 
-
-  //   .write(imagePath.replace('-0', '').replace('imageConversions', 'imageConversions/trimed'), function (err) {
-  //     if (!err) {
-  //       console.log('err', err);
-  //       return;
-  //     }
-
-  //   });
-
-
-
-
-  const [extn] = name.split('.').reverse()
-  console.log("TCL: uploadFile -> n∂ame", name)
-  console.log("TCL: uploadFile -> extn", extn)
-
-  try {
-
-  } catch (error) {
-    console.log("TCL: ARCHIVE -> error", error);
-  }
-  finally {
-    await unlinkAsync(tempFilePath)
-    //  await unlinkAsync(imagePath)
-  }
-};
-
-
-const getDocPreview = async (props) => {
-
-  const { metadata = {} } = props;
-  const { href, } = metadata;
-  const [name] = href.split('/').reverse();
-  const [removed] = name.split('?');
-
-  const [extn] = removed.split('.').reverse()
-  const tempFilePath = path.join(os.tmpdir(), removed);
-
-  const imagePath = path.join(os.tmpdir(), removed.replace(`.${extn}`, '.png'));
+const trimImage = (imagePath, toPath) => {
 
   return new Promise((resolve, reject) => {
 
-    filepreview.generate(tempFilePath, imagePath, function (error) {
-      if (error) {
-        return reject(error);
-      }
-      resolve({ imagePath })
-      console.log('File preview is' + imagePath);
-    });
+
+    gm(imagePath)
+
+      // Invoke trim function  
+      .trim()
+
+      // Process and Write the image 
+
+      .write(toPath, function (err) {
+        if (!err) {
+          console.log('err', err);
+
+
+          return reject(err)
+        }
+        return resolve(toPath)
+      });
 
   })
 
+
 }
+
+
+const tryTrim = async (imagePath) => {
+  const toPath = imagePath.replace('-0', '').replace('imageConversions', 'imageConversions/trimed');
+  try {
+    const trimed = await trimImage(imagePath)
+    return trimed
+  } catch (error) {
+    console.log("tryTrim -> error", error)
+    return toPath
+
+  }
+
+}
+
+
+const convertAndTrim = async (url) => {
+
+  const info = getPath(url)
+
+
+  const { path, name, ext, n } = info;
+
+  if (ext == 'pdf') {
+    const { tempFilePath } = await downloadPdf({ href: url, name })
+    console.log("convertAndTrim -> tempFilePath", tempFilePath)
+
+    const pdfImage = new PDFImage(tempFilePath);
+    const imagePath = await pdfImage.convertPage(0);
+
+
+    const trimmed = await tryTrim(imagePath)
+
+    await unlinkAsync(tempFilePath);
+    await unlinkAsync(imagePath)
+
+  } else {
+    const { tempFilePath } = await downloadPdf({ href: url, name })
+    console.log("convertAndTrim -> tempFilePath", tempFilePath)
+
+    const trimmed = await tryTrim(imagePath)
+
+    await unlinkAsync(tempFilePath);
+  }
+
+
+
+}
+
+
 
 const unlinkAsync = (path) => {
   return new Promise((resolve, reject) => {
@@ -268,12 +272,11 @@ const unlinkAsync = (path) => {
 
 const downloadPdf = async (props) => {
   try {
-    const { metadata = {}, formated } = props;
-    const { href, } = metadata;
-    console.log("downloadPdf -> formated", formated)
+    const { href, name } = props;
+    console.log("downloadPdf -> name", name)
 
     // path.dirname()
-    const tempFilePath = path.join(__dirname, formated);
+    const tempFilePath = path.join(__dirname, name);
     const pdfResponse = await axios({
       url: href,
       method: 'GET',
@@ -282,7 +285,8 @@ const downloadPdf = async (props) => {
     await writeFileAsync(tempFilePath, pdfResponse.data);
     return {
       tempFilePath,
-      name: formated,
+      name,
+      ...props,
     };
   }
   catch (error) {
