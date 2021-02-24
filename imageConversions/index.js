@@ -59,48 +59,37 @@ const files = () => {
   });
 }
 
-
-const getPath = (url) => {
+const getParts = (url) => {
 
   const [parts] = url.split('?')
 
-
-  //const path = decodeURIComponent(parts.replace('https://firebasestorage.googleapis.com/v0/b/epicc-admin.appspot.com/o', ''))
- 
- 
   const path = parts.replace('https://firebasestorage.googleapis.com/v0/b/epicc-admin.appspot.com/o', '')
 
+  const segs = path.split('/')
 
-  const [name] = path.split('/').reverse()
+  const [name] = segs.reverse()
   //console.log("getPath -> path", name, url)
 
 
   const [n, ext] = name.split('.')
 
-  return { path, name, ext, n };
+  return { path, name, ext, n, segs: [...segs.reverse().filter(seg => seg)] }
+
+}
+
+const getPath = (url) => {
+
+  const decoded = getParts(decodeURIComponent(url))
+
+  const info = getParts(url)
+
+  return { ...info, decoded };
 }
 
 const update = async () => {
 
   //await signIn()
 
-  // const there = fs.existsSync(pngname)
-  // console.log("update -> there", there)
-  // const bucket = storageRef.bucket(shoppdfbucket);
-  // let imageDest = `/funtionalPngs/${pngname}`;
-  // await bucket.upload(imagePath, {
-  //   destination: imageDest,
-  //   metadata: {
-  //     // firebaseStorageDownloadTokens: uuid
-  //     metadata,
-  //   },
-  // });
-  // const [imageUrl] = await bucket
-  //   .file(imageDest)
-  //   .getSignedUrl({
-  //     action: 'read',
-  //     expires: '03-09-2491'
-  //   });  //  console.log("update -> result", result.docs.length)
 
 
   const questions = []
@@ -124,7 +113,7 @@ const update = async () => {
         await updateQUestionImaget(question)
 
 
-      //  questions.push(question)
+        //  questions.push(question)
 
 
       })
@@ -185,6 +174,51 @@ update()
 
 
 
+const getNewUrl = async (props) => {
+
+  const { path, fileInfo } = props;
+
+  const { decoded } = fileInfo;
+
+  const { segs, name } = decoded
+
+  const [first, ...rest] = segs;
+
+  const safefolder = [first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png')
+  console.log("getNewUrl -> safefolder", safefolder)
+
+  try {
+
+    //   const bucket = storageRef.bucket(shoppdfbucket);
+    let imageDest = safefolder
+    await bucket.upload(path, {
+      destination: imageDest,
+      metadata: {
+        // firebaseStorageDownloadTokens: uuid
+        // name,
+      },
+    });
+    //const [imageUrl] = 
+    await bucket
+      .file(imageDest).makePublic()
+    // .getSignedUrl({
+    //   action: 'read',
+    //   expires: '03-09-2491'
+    // });  //  console.log("update -> result", result.docs.length)
+    const url = await bucket
+      .file(imageDest).publicUrl()
+    console.log("getNewUrl -> url", url)
+    return url
+  } catch (error) {
+    console.log("getNewUrl -> error", error)
+
+  }
+
+
+
+
+}
+
 const updateQUestionImaget = async (question) => {
 
 
@@ -209,32 +243,64 @@ const updateQUestionImaget = async (question) => {
 
   if (billImage) {
     newData.oldbillImage = billImage
-    const trimmed = await convertAndTrim(billImage)
+    const fileInfo = getPath(billImage)
+
+    const { decoded } = fileInfo;
+
+    const { segs } = decoded;
+
+    const [first, ...rest] = segs;
+    const safefolder = encodeURIComponent([first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png'))
+
+    const nwUrl = `https://storage.googleapis.com/epicc-admin.appspot.com/${safefolder}`
+
+    // const there = await isThere(nwUrl)
+    // console.log("updateQUestionImaget -> there", there, path)
 
 
-    const result = await testAsync(trimmed)
+    // const trimmed = await convertAndTrim(billImage)
+    // const result = await testAsync(trimmed)
+    // if (!result) {
+    //   console.log(" bad trim -> billImage", billImage)
+    // }
 
 
 
-    if (!result) {
-      console.log(" bad trim -> billImage", billImage)
-    }
 
-    //  newData.billImage = trimmed
+
+    // const newUrl = await getNewUrl({ path: trimmed, fileInfo })
+
+    newData.billImage = nwUrl
   }
   if (challangePicture) {
 
+    const fileInfo = getPath(challangePicture)
+
+    const { decoded } = fileInfo;
+
+    const { segs, path, } = decoded;
+
+    const [first, ...rest] = segs;
+    const safefolder = encodeURIComponent([first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png'))
+
+    const nwUrl = `https://storage.googleapis.com/epicc-admin.appspot.com/${safefolder}`
+
+    // const there = await isThere(nwUrl)
+    // console.log("updateQUestionImaget -> there", there, path)
     newData.oldchallangePicture = challangePicture
-    const trimmed = await convertAndTrim(challangePicture)
+    // const trimmed = await convertAndTrim(challangePicture)
+    // const result = await testAsync(trimmed)
+    // if (!result) {
+    //   console.log(" bad trim -> challangePicture", challangePicture)
+    // }
 
-    const result = await testAsync(trimmed)
+    // const newUrl = await getNewUrl({ path: trimmed, fileInfo })
 
-    if (!result) {
-      console.log(" bad trim -> challangePicture", challangePicture)
-
-    }
-    //   newData.challangePicture = trimmed
+    newData.challangePicture = nwUrl
   }
+
+
+  //await questionsRef.doc(question.id).update(newData)
 
 }
 
@@ -263,6 +329,8 @@ const trimImage = (imagePath, toPath) => {
       });
 
   })
+  console.log("getNewUrl -> imageUrl", imageUrl)
+  console.log("getNewUrl -> imageUrl", imageUrl)
 
 
 }
@@ -306,13 +374,9 @@ const testAsync = (path) => {
 
 
 
-
-
-
 const convertAndTrim = async (url) => {
 
   const info = getPath(url)
-
 
   const { path, name, ext, n } = info;
 
@@ -333,7 +397,7 @@ const convertAndTrim = async (url) => {
 
 
     const isThere = await testAsync(tempFilePath)
-   // console.log("convertAndTrim -> isThere", isThere, tempFilePath)
+    // console.log("convertAndTrim -> isThere", isThere, tempFilePath)
 
 
     if (ext == 'pdf') {
@@ -343,7 +407,7 @@ const convertAndTrim = async (url) => {
       try {
         const pdfImage = new PDFImage(tempFilePath);
         const imagePath = await pdfImage.convertPage(0);
-       // await unlinkAsync(imagePath)
+        // await unlinkAsync(imagePath)
         const trimmed = await tryTrim(imagePath)
 
         return trimmed
@@ -354,7 +418,7 @@ const convertAndTrim = async (url) => {
 
 
 
-     //   await unlinkAsync(tempFilePath);
+        //   await unlinkAsync(tempFilePath);
 
       }
 
@@ -364,14 +428,29 @@ const convertAndTrim = async (url) => {
 
       const trimmed = await tryTrim(tempFilePath)
 
-     // await unlinkAsync(tempFilePath);
+      // await unlinkAsync(tempFilePath);
 
       return trimmed
     }
 
   }
 
+}
 
+const isThere = async (url) => {
+
+  try {
+    const pdfResponse = await axios({
+      url,
+      method: 'GET',
+      responseType: 'arraybuffer',
+    });
+
+    return pdfResponse.data.length
+  } catch (error) {
+    console.log("isThere -> error", error.message, url)
+
+  }
 
 }
 
