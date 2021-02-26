@@ -96,10 +96,10 @@ const update = async () => {
 
   let count = 0
   const mods = [
-    'Correct change',
-    'Bill Coin Total',
-    'Budgeting 1',
-    'Budgeting 2',
+    // 'Correct change',
+    // 'Bill Coin Total',
+    // 'Budgeting 1',
+    // 'Budgeting 2',
     'Daily Math',
   ]
     .map(async (sheetName) => {
@@ -146,10 +146,6 @@ const update = async () => {
 
   //     i++
   //   }
-
-
-
-
 
   // }
 
@@ -226,16 +222,24 @@ const updateQUestionImaget = async (question) => {
 
   const data = question.data()
 
-  const { challangePicture, billImage, questionSet = [], moduleName } = data;
+  const {
+    //  challangePicture, 
+    billImage,
+    questionSet = [],
+    moduleName
+  } = data;
 
   const [one] = questionSet;
 
-  const cp = one ? one.challangePicture : challangePicture
+
+  const challangePicture = one ? one.challangePicture : undefined
 
 
-  images.challangePicture = cp;
+  // const cp = one ? one.challangePicture : challangePicture
 
-  images.billImage = billImage;
+  // images.challangePicture = cp;
+
+  // images.billImage = billImage;
 
   const newData = {
     ...data,
@@ -272,6 +276,7 @@ const updateQUestionImaget = async (question) => {
 
     newData.billImage = nwUrl
   }
+
   if (challangePicture) {
 
     const fileInfo = getPath(challangePicture)
@@ -282,12 +287,10 @@ const updateQUestionImaget = async (question) => {
 
     const [first, ...rest] = segs;
     const safefolder = encodeURIComponent([first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png'))
-
     const nwUrl = `https://storage.googleapis.com/epicc-admin.appspot.com/${safefolder}`
+    const there = await isThere(nwUrl)
 
-    // const there = await isThere(nwUrl)
-    // console.log("updateQUestionImaget -> there", there, path)
-    newData.oldchallangePicture = challangePicture
+    console.log("updateQUestionImaget -> there", there, path)
     // const trimmed = await convertAndTrim(challangePicture)
     // const result = await testAsync(trimmed)
     // if (!result) {
@@ -295,12 +298,14 @@ const updateQUestionImaget = async (question) => {
     // }
 
     // const newUrl = await getNewUrl({ path: trimmed, fileInfo })
+    // console.log("updateQUestionImaget -> newUrl", newUrl)
 
+    newData.oldchallangePicture = challangePicture
     newData.challangePicture = nwUrl
   }
 
 
-  //await questionsRef.doc(question.id).update(newData)
+//  await questionsRef.doc(question.id).update(newData)
 
 }
 
@@ -329,8 +334,6 @@ const trimImage = (imagePath, toPath) => {
       });
 
   })
-  console.log("getNewUrl -> imageUrl", imageUrl)
-  console.log("getNewUrl -> imageUrl", imageUrl)
 
 
 }
