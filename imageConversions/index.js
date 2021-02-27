@@ -1,4 +1,5 @@
 const firebase = require('../firebase');
+const pdf = require('pdf-poppler');
 
 const wait = (time) => new Promise((resolve) => { setTimeout(() => resolve(), time) })
 
@@ -17,7 +18,7 @@ const questionsRef = db.collection('sheetQuestions');
 const areasRef = db.collection('sheetAreas');
 const modsRef = db.collection('sheetMods');
 var PDFImage = require("pdf-image").PDFImage;
-var path = require('path')
+var nodepath = require('path')
 var os = require('os')
 var axios = require('axios')
 var fs = require('fs')
@@ -96,11 +97,11 @@ const update = async () => {
 
   let count = 0
   const mods = [
-    // 'Correct change',
-    // 'Bill Coin Total',
+    'Correct change',
+    'Bill Coin Total',
     // 'Budgeting 1',
     // 'Budgeting 2',
-    'Daily Math',
+    // 'Daily Math',
   ]
     .map(async (sheetName) => {
 
@@ -226,28 +227,24 @@ const updateQUestionImaget = async (question) => {
     //  challangePicture, 
     billImage,
     questionSet = [],
-    moduleName
+    moduleName,
+    oldbillImage,
+    oldchallangePicture
   } = data;
 
   const [one] = questionSet;
 
-
-  const challangePicture = one ? one.challangePicture : undefined
-
+  const challangePicture = one ? one.challangePicture : data.challangePicture
 
   // const cp = one ? one.challangePicture : challangePicture
-
-  // images.challangePicture = cp;
-
-  // images.billImage = billImage;
 
   const newData = {
     ...data,
   }
 
-  if (billImage) {
-    newData.oldbillImage = billImage
-    const fileInfo = getPath(billImage)
+  if (oldbillImage) {
+    // newData.oldbillImage = billImage
+    const fileInfo = getPath(oldbillImage)
 
     const { decoded } = fileInfo;
 
@@ -261,15 +258,11 @@ const updateQUestionImaget = async (question) => {
     // const there = await isThere(nwUrl)
     // console.log("updateQUestionImaget -> there", there, path)
 
-
-    // const trimmed = await convertAndTrim(billImage)
-    // const result = await testAsync(trimmed)
-    // if (!result) {
-    //   console.log(" bad trim -> billImage", billImage)
-    // }
-
-
-
+    const trimmed = await convertAndTrim(oldbillImage)
+    const result = await testAsync(trimmed)
+    if (!result) {
+      console.log(" bad trim -> oldbillImage", oldbillImage)
+    }
 
 
     // const newUrl = await getNewUrl({ path: trimmed, fileInfo })
@@ -277,35 +270,34 @@ const updateQUestionImaget = async (question) => {
     newData.billImage = nwUrl
   }
 
-  if (challangePicture) {
+  if (oldchallangePicture) {
 
-    const fileInfo = getPath(challangePicture)
+    const fileInfo = getPath(oldchallangePicture)
 
     const { decoded } = fileInfo;
 
     const { segs, path, } = decoded;
 
     const [first, ...rest] = segs;
-    const safefolder = encodeURIComponent([first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png'))
-    const nwUrl = `https://storage.googleapis.com/epicc-admin.appspot.com/${safefolder}`
-    const there = await isThere(nwUrl)
+    // const safefolder = encodeURIComponent([first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png'))
+    // const nwUrl = `https://storage.googleapis.com/epicc-admin.appspot.com/${safefolder}`
+    // const there = await isThere(nwUrl)
 
-    console.log("updateQUestionImaget -> there", there, path)
-    // const trimmed = await convertAndTrim(challangePicture)
-    // const result = await testAsync(trimmed)
-    // if (!result) {
-    //   console.log(" bad trim -> challangePicture", challangePicture)
-    // }
+    const trimmed = await convertAndTrim(oldchallangePicture)
+    const result = await testAsync(trimmed)
+    if (!result) {
+      console.log(" bad trim -> oldchallangePicture", oldchallangePicture)
+    }
 
     // const newUrl = await getNewUrl({ path: trimmed, fileInfo })
     // console.log("updateQUestionImaget -> newUrl", newUrl)
 
-    newData.oldchallangePicture = challangePicture
-    newData.challangePicture = nwUrl
+    // newData.oldchallangePicture = challangePicture
+    // newData.challangePicture = nwUrl
   }
 
 
-//  await questionsRef.doc(question.id).update(newData)
+  //  await questionsRef.doc(question.id).update(newData)
 
 }
 
@@ -326,8 +318,6 @@ const trimImage = (imagePath, toPath) => {
       .write(toPath, function (err) {
         if (!err) {
           //console.log('err', err);
-
-
           return reject(err)
         }
         return resolve(toPath)
@@ -340,7 +330,7 @@ const trimImage = (imagePath, toPath) => {
 
 
 const tryTrim = async (imagePath) => {
-  const toPath = imagePath.replace('-0', '').replace('imageConversions', 'imageConversions/trimed');
+  const toPath = imagePath.replace('.pdf-1', '').replace('imageConversions', 'imageConversions/trimed');
   try {
     const trimed = await trimImage(imagePath, toPath)
     return trimed
@@ -375,7 +365,16 @@ const testAsync = (path) => {
 
 }
 
+const pdfCOnvert = () => {
 
+  return new Promise((res, rej) => {
+
+
+
+
+  })
+
+}
 
 const convertAndTrim = async (url) => {
 
@@ -386,40 +385,49 @@ const convertAndTrim = async (url) => {
   const result = await downloadPdf({ href: url, name })
   //await wait(500)
 
-
   //const { tempFilePath } = result
 
   // return tempFilePath
 
-  if (!result) {
-    return
-  } else {
+  if (result) {
 
     const { tempFilePath } = result
 
 
-
-    const isThere = await testAsync(tempFilePath)
-    // console.log("convertAndTrim -> isThere", isThere, tempFilePath)
-
-
     if (ext == 'pdf') {
       // console.log("convertAndTrim -> tempFilePath", tempFilePath)
-
-
       try {
-        const pdfImage = new PDFImage(tempFilePath);
-        const imagePath = await pdfImage.convertPage(0);
-        // await unlinkAsync(imagePath)
-        const trimmed = await tryTrim(imagePath)
+        // const pdfImage = new PDFImage(tempFilePath,  {
+        //   convertOptions: {
+        //     "-quality": "100"
+        //   }
+        // });
+        // const imagePath = await pdfImage.convertPage(0);
 
+        const imagePath = `${tempFilePath}-1.jpg`
+
+        //    let file = 'C:\\tmp\\convertme.pdf'
+
+        let opts = {
+          scale:2000,
+          format: 'jpeg',
+          out_dir: nodepath.dirname(tempFilePath),
+          out_prefix: `${name}`,
+          page: null
+        }
+
+        const res = await pdf.convert(tempFilePath, opts)
+
+
+        // await unlinkAsync(imagePath)
+         const trimmed = await tryTrim(imagePath)
+
+        
         return trimmed
       } catch (error) {
-        console.log("convertAndTrim  PDFImage -> error", url, error)
+        console.log("convertAndTrim  PDFImage -> error", url, error.message)
 
       } finally {
-
-
 
         //   await unlinkAsync(tempFilePath);
 
@@ -437,6 +445,8 @@ const convertAndTrim = async (url) => {
     }
 
   }
+
+  return
 
 }
 
@@ -479,7 +489,7 @@ const downloadPdf = async (props) => {
     const { href, name } = props;
 
     // path.dirname()
-    const tempFilePath = path.join(__dirname, name);
+    const tempFilePath = nodepath.join(__dirname, name);
     const pdfResponse = await axios({
       url: href,
       method: 'GET',
@@ -493,7 +503,7 @@ const downloadPdf = async (props) => {
     };
   }
   catch (error) {
-    console.log("TCL: downloadPdf -> error", error);
+    console.log("TCL: downloadPdf -> error", error.message);
   }
 };
 
