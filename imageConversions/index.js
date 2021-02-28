@@ -167,7 +167,7 @@ const update = async () => {
   //   });
   // });
 }
-update()
+//update()
 
 
 
@@ -347,34 +347,16 @@ const testAsync = (path) => {
 
   return new Promise((resolve, reject) => {
 
-
-
     fs.exists(path, (here) => {
-
 
       resolve(here)
 
-
     })
 
-
-
-
-  })
-
-
-}
-
-const pdfCOnvert = () => {
-
-  return new Promise((res, rej) => {
-
-
-
-
   })
 
 }
+
 
 const convertAndTrim = async (url) => {
 
@@ -418,10 +400,8 @@ const convertAndTrim = async (url) => {
 
         const res = await pdf.convert(tempFilePath, opts)
 
-
         // await unlinkAsync(imagePath)
          const trimmed = await tryTrim(imagePath)
-
         
         return trimmed
       } catch (error) {
