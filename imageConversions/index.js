@@ -91,17 +91,15 @@ const update = async () => {
 
   //await signIn()
 
-
-
   const questions = []
 
   let count = 0
   const mods = [
     'Correct change',
     'Bill Coin Total',
-    // 'Budgeting 1',
-    // 'Budgeting 2',
-    // 'Daily Math',
+    'Budgeting 1',
+    'Budgeting 2',
+    'Daily Math',
   ]
     .map(async (sheetName) => {
 
@@ -113,15 +111,11 @@ const update = async () => {
 
         await updateQUestionImaget(question)
 
-
         //  questions.push(question)
-
 
       })
 
-
     })
-
 
   await Promise.all(mods)
   console.log("update -> result", count)
@@ -150,28 +144,12 @@ const update = async () => {
 
   // }
 
-  // SheetQuestions.forEach(({ sheetName, questions }) => {
-  //   console.log("update -> moduleName", moduleName)
-
-  //   // console.log("TCL: sheetName", sheetName)
-  //   questions.forEach(async (questionData) => {
-  //     //  console.log("uploadNewQuestions -> questionData", questionData)
-  //     // console.log("questionData", questionData)
-  //     // console.log("TCL: questionData", questionData)
-
-  //     //    console.log("update -> moduleName", moduleName)
-
-  //     //  await questionsRef.doc().set({ ...questionData, areaOfConcentraion: 'Cognition', moduleName })
-
-  //     //console.log("TCL: qcount", questionData);
-  //   });
-  // });
 }
-//update()
+update()
 
 
 
-const getNewUrl = async (props) => {
+const getUploadedUrl = async (props) => {
 
   const { path, fileInfo } = props;
 
@@ -182,7 +160,7 @@ const getNewUrl = async (props) => {
   const [first, ...rest] = segs;
 
   const safefolder = [first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png')
-  console.log("getNewUrl -> safefolder", safefolder)
+  console.log("getUploadedUrl -> safefolder", safefolder)
 
   try {
 
@@ -204,10 +182,10 @@ const getNewUrl = async (props) => {
     // });  //  console.log("update -> result", result.docs.length)
     const url = await bucket
       .file(imageDest).publicUrl()
-    console.log("getNewUrl -> url", url)
+    console.log("getUploadedUrl -> url", url)
     return url
   } catch (error) {
-    console.log("getNewUrl -> error", error)
+    console.log("getUploadedUrl -> error", error, decoded)
 
   }
 
@@ -248,24 +226,24 @@ const updateQUestionImaget = async (question) => {
 
     const { decoded } = fileInfo;
 
-    const { segs } = decoded;
+    const { segs,path } = decoded;
 
     const [first, ...rest] = segs;
     const safefolder = encodeURIComponent([first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png'))
 
     const nwUrl = `https://storage.googleapis.com/epicc-admin.appspot.com/${safefolder}`
 
-    // const there = await isThere(nwUrl)
-    // console.log("updateQUestionImaget -> there", there, path)
+    const there = await isThere(nwUrl)
+    console.log("updateQUestionImaget -> there", there, path)
 
-    const trimmed = await convertAndTrim(oldbillImage)
-    const result = await testAsync(trimmed)
-    if (!result) {
-      console.log(" bad trim -> oldbillImage", oldbillImage)
-    }
+    // const trimmed = await convertAndTrim(oldbillImage)
+    // const result = await testAsync(trimmed)
+    // if (!result) {
+    //   console.log(" bad trim -> oldbillImage", oldbillImage)
+    // }
 
 
-    // const newUrl = await getNewUrl({ path: trimmed, fileInfo })
+    //const uploadedUrl = await getUploadedUrl({ path: trimmed, fileInfo })
 
     newData.billImage = nwUrl
   }
@@ -279,18 +257,19 @@ const updateQUestionImaget = async (question) => {
     const { segs, path, } = decoded;
 
     const [first, ...rest] = segs;
-    // const safefolder = encodeURIComponent([first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png'))
-    // const nwUrl = `https://storage.googleapis.com/epicc-admin.appspot.com/${safefolder}`
-    // const there = await isThere(nwUrl)
+    const safefolder = encodeURIComponent([first.replace(`${first}`, `trimmed-${first}`), ...rest].join('/').replace('.pdf', '.png'))
+    const nwUrl = `https://storage.googleapis.com/epicc-admin.appspot.com/${safefolder}`
+    const there = await isThere(nwUrl)
+    console.log("updateQUestionImaget -> there", there, path)
 
-    const trimmed = await convertAndTrim(oldchallangePicture)
-    const result = await testAsync(trimmed)
-    if (!result) {
-      console.log(" bad trim -> oldchallangePicture", oldchallangePicture)
-    }
+    // const trimmed = await convertAndTrim(oldchallangePicture)
+    // const result = await testAsync(trimmed)
+    // if (!result) {
+    //   console.log(" bad trim -> oldchallangePicture", oldchallangePicture)
+    // }
 
-    // const newUrl = await getNewUrl({ path: trimmed, fileInfo })
-    // console.log("updateQUestionImaget -> newUrl", newUrl)
+    // const uploadedUrl = await getUploadedUrl({ path: trimmed, fileInfo })
+    // console.log("updateQUestionImaget -> uploadedUrl", uploadedUrl)
 
     // newData.oldchallangePicture = challangePicture
     // newData.challangePicture = nwUrl
@@ -391,7 +370,7 @@ const convertAndTrim = async (url) => {
         //    let file = 'C:\\tmp\\convertme.pdf'
 
         let opts = {
-          scale:2000,
+          scale: 2000,
           format: 'jpeg',
           out_dir: nodepath.dirname(tempFilePath),
           out_prefix: `${name}`,
@@ -401,8 +380,8 @@ const convertAndTrim = async (url) => {
         const res = await pdf.convert(tempFilePath, opts)
 
         // await unlinkAsync(imagePath)
-         const trimmed = await tryTrim(imagePath)
-        
+        const trimmed = await tryTrim(imagePath)
+
         return trimmed
       } catch (error) {
         console.log("convertAndTrim  PDFImage -> error", url, error.message)
